@@ -1,48 +1,115 @@
 <script>
+    import { Column } from "svelte-headless-table";
     import Badge from "../components/Badge.svelte";
     import Icon from "../components/icon.svelte";
     import Link from "../components/link.svelte";
+    import Popover from "../components/Popover.svelte";
+    import Table from "../components/Table.svelte";
     import TagList from "../components/TagList.svelte";
+    import { readable } from "svelte/store";
 
-    
-    let array = new Array(20).map((item,idx)=> `count:${idx}`)
-    let items = array
+    let array = ["agdagag", "agdagag", "agdagag", "agdaga", "adhlla"];
+    let items = [];
 
+    for (let i = 0; i < 4; i++) {
+        items = [...items, ...array];
+    }
+
+    const data = readable([
+        { name: "Ada Lovelace", age: 21 },
+        { name: "Barbara Liskov", age: 52 },
+        { name: "Richard Hamming", age: 38 },
+    ]);
+
+    const columns = [
+        {
+            header: "Name",
+            accessor: "name",
+        },
+        {
+            header: "Age",
+            accessor: "age",
+        },
+    ];
 </script>
 
-<div class='container'>
+<div class="container">
+    <Badge label="watchdog" icon={Icon} iconPosition="right" />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right'/>
+    <Badge label="watchdog" icon={Icon} iconPosition="left" />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='left'/>
+    <Badge label="watchdog" icon={Icon} iconPosition="right" isBorderless />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' isBorderless/>
-    
-    <Badge label='watchdog' icon={Icon} iconPosition='right' isInteractive/>
+    <Badge label="watchdog" icon={Icon} iconPosition="right" isInteractive />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' isInteractive count={20}/>
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        isInteractive
+        count={20}
+    />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' count={1234} maxCount={2000}/>
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        count={1234}
+        maxCount={2000}
+    />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' count={1234} maxCount={2000} level="warning"/>
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        count={1234}
+        maxCount={2000}
+        level="warning"
+    />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' count={1234} maxCount={2000} level="danger" hasTooltip/>
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        count={1234}
+        maxCount={2000}
+        level="danger"
+        hasTooltip
+    />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' size="xs" level="warning"/>
-    <Badge label='watchdog' as={Link} compProps={{href:'/yeah!',onClick:(e)=> console.log(e)
-    }} icon={Icon} iconPosition='right' size="sm" level="danger"/>
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        size="xs"
+        level="warning"
+    />
+    <Badge
+        label="watchdog"
+        as={Link}
+        compProps={{ href: "/yeah!", onClick: (e) => console.log(e) }}
+        icon={Icon}
+        iconPosition="right"
+        size="sm"
+        level="danger"
+    />
 
-    <Badge label='watchdog' icon={Icon} iconPosition='right' size="lg" title="Badge" as="button" name='button' />
-
-
-    
-    
+    <Badge
+        label="watchdog"
+        icon={Icon}
+        iconPosition="right"
+        size="lg"
+        title="Badge"
+        as="button"
+        name="button"
+    />
 </div>
-<TagList {items} />
+<TagList tags={items} lines={2} expandType="popover" gapY={10} />
 
+<Table {data} {columns}></Table>
 
 <style>
-    .container{
+    .container {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
