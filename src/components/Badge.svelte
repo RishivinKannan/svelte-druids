@@ -10,15 +10,26 @@
     export let count = false;
     export let maxCount = 99;
     export let icon = null;
+
+    /**
+     * @type {"left"|"right"}
+     */
     export let iconPosition = "left";
     export let isInteractive = false;
     export let isBorderless = false;
-    export let size = "md";
     export let title = "";
     export let hasTooltip = false;
     export let backgroundColor = "";
     export let textColor = "";
     export let borderColor = "";
+    /**
+     * size of the tags
+     * @type {"xs" | "sm" | "md" | "lg"} .
+     */
+    export let size = "md";
+    /**
+     * @type {"default"|"danger"|"warning"}
+     */
     export let level = "default";
 
     $: titleAttr = hasTooltip & (count > 1000) ? JSON.stringify(count) : title;
@@ -104,6 +115,7 @@
 
 <style>
     .druids-badge-span {
+        background: var(--ui-background);
         padding: 0.25rem 0.75rem;
         width: auto;
         display: inline-flex;

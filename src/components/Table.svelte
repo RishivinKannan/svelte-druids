@@ -1,35 +1,58 @@
-<script lang="ts">
+<script context="module">
+    import { createRender } from "svelte-headless-table";
+    /**
+     * It is an importable function that uses to render the Custom Component.
+     */
+    export { createRender };
+</script>
+
+<script>
     import "../css/global.css";
+    import moveIndex from "../utils/moveIndex";
     import {
         Column,
-        createRender,
         createTable,
         Render,
         Subscribe,
     } from "svelte-headless-table";
-    import { readable, writable } from "svelte/store";
     import {
         addSortBy,
         addResizedColumns,
         addSelectedRows,
         addTableFilter,
         addHiddenColumns,
+        addPagination,
+        addColumnOrder,
     } from "svelte-headless-table/plugins";
     import UpIcon from "./icons/UpIcon.svelte";
     import DownIcon from "./icons/DownIcon.svelte";
     import SelectIndicator from "./SelectIndicator.svelte";
     import SearchIcon from "./icons/SearchIcon.svelte";
     import Popover from "./Popover.svelte";
-    import { hide } from "@popperjs/core";
-    import SettingsIcon from "./icons/SettingsIcon.svelte";
 
-    export let data: any[];
-    export let columns: any[];
+    import SettingsIcon from "./icons/SettingsIcon.svelte";
+    import Pagination from "./Pagination.svelte";
+    import Page from "../routes/+page.svelte";
+    /**
+     * @type {Readable|Writable}
+     */
+    export let data;
+    /*
+     * refer: https://svelte-headless-table.bryanmylee.com/docs/api/create-columns#table-column-columndef-datacolumn
+     */
+    export let columns = [];
+    export let displays = [];
+    export let groups = [];
     export let selectableRows = false;
     export let globalSearch = true;
     export let searchPlaceholder = "";
     export let menu = false;
     export let resizeable = false;
+    export let dropdown = false;
+    export let pagination = false;
+    export let initialPageSize = 5;
+    export let initialHiddenColumnIds = [];
+    export let initialColumnOrderIds = [];
 
     let table = createTable(data, {
         sort: addSortBy(),
@@ -37,6 +60,12 @@
         select: addSelectedRows(),
         filter: addTableFilter(),
         hide: addHiddenColumns(),
+        colOrder: addColumnOrder({
+            initialColumnOrderIds,
+        }),
+        page: addPagination({
+            initialPageSize: pagination ? initialPageSize : $data.length,
+        }),
     });
     let selectCols = [];
 
@@ -63,8 +92,8 @@
                 plugins: {
                     resize: {
                         disable: true,
-                        initialWidth: 35,
-                        maxWidth: 35,
+                        initialWidth: 30,
+                        maxWidth: 30,
                     },
                 },
             }),
@@ -73,13 +102,21 @@
 
     let tableColumns = table.createColumns([
         ...selectCols,
+        ...displays.map((dis) => table.display(dis)),
         ...columns.map((column) => table.column(column)),
+        ...groups.map(({ columns, ...rest }) =>
+            table.group({
+                ...rest,
+                columns: columns.map((col) => table.column(col)),
+            }),
+        ),
     ]);
 
     let {
         flatColumns,
+        visibleColumns,
         headerRows,
-        rows,
+        pageRows,
         tableAttrs,
         tableBodyAttrs,
         pluginStates,
@@ -87,14 +124,43 @@
 
     let { filterValue } = pluginStates.filter;
 
+    let { pageSize, pageCount, pageIndex, hasPreviousPage, hasNextPage } =
+        pluginStates.page;
+
     let { hiddenColumnIds } = pluginStates.hide;
 
     const ids = flatColumns.map((c) => c.id);
     let hideForId = Object.fromEntries(ids.map((id) => [id, false]));
+    initialHiddenColumnIds.map((col) => (hideForId[col] = true));
 
-    $: $hiddenColumnIds = Object.entries(hideForId)
-        .filter(([, hide]) => hide)
-        .map(([id]) => id);
+    $: {
+        $hiddenColumnIds = Object.entries(hideForId)
+            .filter(([, hide]) => hide)
+            .map(([id]) => id);
+    }
+
+    let { columnIdOrder } = pluginStates.colOrder;
+    $columnIdOrder = initialColumnOrderIds ? initialColumnOrderIds : ids;
+
+    function moveColumnToLeft(idx) {
+        let oldIdx = idx;
+        let newIdx = idx - 1;
+        if (idx > 0) $columnIdOrder = moveIndex($columnIdOrder, oldIdx, newIdx);
+    }
+
+    function moveColumnToRight(idx) {
+        let oldIdx = idx;
+        let newIdx = idx + 1;
+
+        if (idx <= flatColumns.length)
+            $columnIdOrder = moveIndex($columnIdOrder, oldIdx, newIdx);
+    }
+
+    $: console.log($columnIdOrder);
+
+    function handleHide(id) {
+        hideForId[id] = !hideForId[id];
+    }
 </script>
 
 <div class="druids-table-header">
@@ -111,12 +177,12 @@
 
     {#if menu}
         <div>
-            <Popover>
+            <Popover isRounded>
                 <button slot="trigger" class="druids-table-settings-trigger">
                     <SettingsIcon />
                 </button>
                 <div slot="popper" class="druids-table-settings">
-                    {#each ids as id}
+                    {#each ids as id (id)}
                         {#if id == "selected"}
                             <span></span>
                         {:else}
@@ -126,7 +192,8 @@
                                     style="all: set;"
                                     id="hide-{id}"
                                     type="checkbox"
-                                    bind:checked={hideForId[id]}
+                                    checked={hideForId[id]}
+                                    on:click={() => handleHide(id)}
                                 />
                             </div>
                         {/if}
@@ -141,7 +208,7 @@
         {#each $headerRows as headerRow (headerRow.id)}
             <Subscribe rowAttrs={headerRow.attrs()} let:rowAttrs>
                 <tr {...rowAttrs} class="druids-table-head-row">
-                    {#each headerRow.cells as cell (cell.id)}
+                    {#each headerRow.cells as cell, idx (cell.id)}
                         <Subscribe
                             attrs={cell.attrs()}
                             let:attrs
@@ -161,9 +228,38 @@
                                     {/if}
                                     <Render of={cell.render()} />
                                 </div>
+                                {#if cell.id !== "selected" && dropdown}
+                                    <div class="druids-table-dropdown">
+                                        <Popover isPadded={false}>
+                                            <button
+                                                slot="trigger"
+                                                class="druids-table-dropdown-trigger"
+                                            >
+                                                <SettingsIcon />
+                                            </button>
+                                            <div slot="popper">
+                                                <button
+                                                    class="druids-table-dropdown-menu"
+                                                    style="width: 100px;"
+                                                    on:click={() =>
+                                                        moveColumnToLeft(idx)}
+                                                >
+                                                    Move to Left
+                                                </button>
+                                                <button
+                                                    class="druids-table-dropdown-menu"
+                                                    style="width: 100px;"
+                                                    on:click={() =>
+                                                        moveColumnToRight(idx)}
+                                                    >Move to Right</button
+                                                >
+                                            </div>
+                                        </Popover>
+                                    </div>
+                                {/if}
 
                                 {#if !props.resize.disabled && resizeable}
-                                    <div
+                                    <span
                                         class="druids-table-resizer resizer"
                                         use:props.resize.drag
                                     />
@@ -176,7 +272,7 @@
         {/each}
     </thead>
     <tbody {...tableBodyAttrs} class="druids-table-body">
-        {#each $rows as row (row.id)}
+        {#each $pageRows as row (row.id)}
             <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
                 <tr {...rowAttrs}>
                     {#each row.cells as cell (cell.id)}
@@ -196,13 +292,66 @@
         {/each}
     </tbody>
 </table>
+<div class="druids-table-footer">
+    {#if pagination}
+        {#if data.length <= 5}
+            <div>
+                <label for="pageSize" class="druids-tabel-select-label"
+                    >Rows per Page:</label
+                >
+                <select id="pageSize" bind:value={$pageSize}>
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={30}>30</option>
+                    <option value={$data.length}>All</option>
+                </select>
+            </div>
+        {/if}
+        <div>
+            <Pagination
+                {hasPreviousPage}
+                {hasNextPage}
+                {pageIndex}
+                totalPages={pageCount}
+            />
+        </div>
+    {/if}
+</div>
 
 <style>
-    .druids-table-header {
-        width: inherit;
+    .druids-table-header,
+    .druids-table-footer {
+        width: 100%;
+        max-width: inherit;
         display: flex;
         padding: 4px 0px;
         justify-content: space-between;
+    }
+
+    .druids-table-footer {
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .druids-tabel-select-label {
+        display: inline-block;
+        font-size: small;
+        color: var(--ui-text-tertiary);
+    }
+
+    .druids-table-footer select {
+        background-color: white;
+        border-radius: 4px;
+        display: inline-block;
+        font: small;
+        line-height: 1.25em;
+        padding: 2px;
+        border: solid 2px var(--ui-border);
+        color: var(--ui-interaction-primary-contrast);
+        margin: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
     }
 
     .druids-table-header input[type="text"] {
@@ -212,6 +361,7 @@
     .druids-table-settings div {
         display: flex;
         justify-content: space-between;
+        min-width: 100px;
         gap: 4px;
     }
 
@@ -239,7 +389,7 @@
     }
 
     .druids-table {
-        width: inherit;
+        width: 100%;
         max-width: inherit;
         border: solid 1px var(--ui-border);
         color: var(--ui-text);
@@ -261,11 +411,61 @@
         text-overflow: ellipsis;
     }
 
+    .druids-table td {
+        overflow: hidden;
+    }
+
     .druids-table-body tr:last-child td {
         border-bottom: none;
     }
     th {
         position: relative;
+    }
+
+    .druids-table-dropdown {
+        position: absolute;
+        right: 2px;
+        top: 0;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .druids-table-dropdown:hover,
+    .druids-table-dropdown:focus {
+        background: var(--ui-interaction-primary-contrast);
+    }
+
+    .druids-table th:has(div:hover) .druids-table-dropdown-trigger {
+        color: inherit;
+    }
+
+    .druids-table-dropdown-trigger {
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: transparent;
+        color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+
+    .druids-table-dropdown-menu {
+        all: unset;
+        width: 100px;
+        font-size: small;
+        font-weight: normal;
+        padding: 8px;
+        background: var(--ui-background);
+        color: var(--ui-text-secondary);
+        border-bottom: solid 1px var(--ui-border);
+        cursor: pointer;
+    }
+
+    .druids-table-dropdown-menu:disabled {
+        cursor: not-allowed;
     }
 
     .druids-table-resizer {

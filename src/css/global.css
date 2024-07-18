@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    font-family: "Noto Sans", sans-serif;
+}
+
 :root {
     --ui-background: #ffffff;
     --ui-background-secondary: #f9fafb;
@@ -8,6 +14,7 @@
     --ui-placeholder: #edf0f4;
     --ui-ai-background-primary: #f2ecfc;
     --ui-ai-background-secondary: #eaf6fc;
+    --ui-tag-background: #f4f4f5;
 
     --ui-text: #202f38;
     --ui-text-secondary: #656f75;

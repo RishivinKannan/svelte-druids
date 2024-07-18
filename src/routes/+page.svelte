@@ -104,9 +104,9 @@
         name="button"
     />
 </div>
-<TagList tags={items} lines={2} expandType="popover" gapY={10} />
+<TagList tags={items} lines={2} gapY={10} />
 
-<Table {data} {columns}></Table>
+<Table {data} {columns} dropdown></Table>
 
 <style>
     .container {

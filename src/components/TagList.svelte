@@ -1,20 +1,64 @@
 <script>
     import { onMount } from "svelte";
-    import Badge from "./Badge.svelte";
+
     import Popover from "./Popover.svelte";
     import Table from "./Table.svelte";
     import { readable } from "svelte/store";
+    import Tag from "./Tag.svelte";
+    import { createRender } from "./Table.svelte";
 
+    /**
+     *   Array of string | Array of objects which is props of each tag exclude size prop
+     *   eg. ['tag','tag'] | [{label:'tag',icon: Icon, iconColor:"black" }]
+     * @type {array} tags that are to be render.
+     */
     export let tags = [];
-    export let tagMaxWidth = null;
+
+    /**
+     * @type {number}
+     * How many lines of tags to be render?
+     */
     export let lines = 1;
+
+    /**
+     * @type {number} gap between tags in X-axis.
+     */
     export let gapX = 2;
+
+    /**
+     * @type {number} gap between tags in Y-axis.
+     */
     export let gapY = 2;
+
+    /**
+     * @type {"xs" | "sm" | "md" | "lg"} size of the tags.
+     */
     export let size = "sm";
+
+    /**
+     * @type {string} content that placed before the tagList.
+     */
     export let beforeContent = "";
+
+    /**
+     * @type {string} content that placed after the tagList.
+     */
     export let afterContent = "";
+
+    /**
+     * @type {"popover" | "inline"} when click on the indicator button, it will show the alltags in inline or Popover.
+     */
+    export let expandType = "popover";
+
+    /**
+     * @type {number} maxCount of visible tags to be render.
+     */
     export let maxCount = null;
-    export let expandType = "inline";
+    /**
+     * @type {number} specify the width of the space for each tags to be render.
+        Optional
+     */
+    export let tagMaxWidth = null;
 
     $: tagsData = readable(
         tags.map((tag) => {
@@ -26,6 +70,13 @@
         {
             header: "Tags",
             accessor: "tag",
+            cell: (item, state) =>
+                createRender(
+                    Tag,
+                    typeof item.value === "object"
+                        ? item.value
+                        : { label: item.value },
+                ),
         },
     ];
 
@@ -45,6 +96,8 @@
 
     let alltagsShow = false;
 
+    let rendered = false;
+
     function handleIndicatorClick() {
         alltagsShow = !alltagsShow;
     }
@@ -60,11 +113,16 @@
         });
         resizeObserver.observe(containerRef);
         calculateRendertags();
+        rendered = true;
         return () => {
             resizeObserver.disconnect();
         };
     });
 
+    // whenever line props change it will rerender. rendered used for calculateRenderTags only after onMount;
+    $: {
+        if (rendered & (lines > 0)) calculateRendertags();
+    }
     function calculateRendertags() {
         let currentWidth = 0;
 
@@ -128,7 +186,11 @@
             <div class="druids-taglist-contents">{beforeContent}</div>
         {/if}
         {#each rendertags as tag}
-            <Badge label={tag} {size} />
+            {#if typeof tag === "object"}
+                <Tag {...tag} {size} />
+            {:else}
+                <Tag label={tag} {size} />
+            {/if}
         {/each}
 
         {#if tags.length !== rendertags.length}
@@ -140,10 +202,7 @@
                     >+{tags.length - rendertags.length}</button
                 >
             {:else if expandType == "popover"}
-                <Popover
-                    maxWidth={300}
-                    popoverClassName="druids-taglist-popover"
-                >
+                <Popover maxWidth={300}>
                     <button
                         slot="trigger"
                         style="background-color: inherit;"
@@ -175,8 +234,12 @@
         {#if beforeContent}
             <div class="druids-taglist-contents">{beforeContent}</div>
         {/if}
-        {#each tags as tag, index}
-            <Badge label={tag} {size} />
+        {#each tags as tag}
+            {#if typeof tag === "object"}
+                <Tag {...tag} {size} />
+            {:else}
+                <Tag label={tag} {size} />
+            {/if}
         {/each}
         {#if afterContent}
             <div class="druids-taglist-contents">{afterContent}</div>
@@ -215,10 +278,10 @@
     }
 
     .druids-taglist-overflow-indicator {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         margin-left: 4px;
         font-style: italic;
+        border: solid 2px var(--ui-border);
+        border-radius: 4px;
+        padding: 2px 6px;
     }
 </style>

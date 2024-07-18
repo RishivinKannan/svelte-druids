@@ -1,58 +1,54 @@
-<script lang="ts">
+<script>
     import { onMount } from "svelte";
     import { createPopper } from "@popperjs/core";
     import { flip } from "@popperjs/core";
     import { preventOverflow } from "@popperjs/core";
     import Badge from "./Badge.svelte";
+    import { portal } from "./Portal/Portal.svelte";
 
-    type Placement =
-        | "auto"
-        | "auto-start"
-        | "auto-end"
-        | "top"
-        | "top-start"
-        | "top-end"
-        | "bottom"
-        | "bottom-start"
-        | "bottom-end"
-        | "right"
-        | "right-start"
-        | "right-end"
-        | "left"
-        | "left-start"
-        | "left-end";
+    // type Strategy = "absolute" | "fixed";
 
-    type Strategy = "absolute" | "fixed";
+    // type Rect = {
+    //     width: number;
+    //     height: number;
+    //     x: number;
+    //     y: number;
+    // };
+    /**
+     * @typedef { ("auto"| "auto-start"| "auto-end"| "top"| "top-start"| "top-end"| "bottom"| "bottom-start"| "bottom-end"| "right"| "right-start"| "right-end"| "left"| "left-start"| "left-end")} Placement
+     * @type {Placement}
+     */
+    export let placement = "bottom-end";
+    /**
+     * @type {"absolute"|"inline"}
+     */
+    export let strategy = "absolute";
 
-    type Rect = {
-        width: number;
-        height: number;
-        x: number;
-        y: number;
-    };
-    type OffsetFunc = ({
-        popper,
-        reference,
-        placement,
-    }: {
-        popper: Rect;
-        reference: Rect;
-        placement: Placement;
-    }) => [number?, number?];
-
-    export let placement: Placement = "bottom-end";
-    export let strategy: Strategy = "absolute";
-    export let popperOffset: OffsetFunc | [number?, number?] = [0, 8];
+    /**
+     *
+     * @typedef {({popper,reference,placement}: {popper: Rect; reference: Rect;placement: Placement;}) => [number?, number?]} OffsetFunc
+     * @typedef {{width: number  height: number   x: number;  y: number}} Rect
+     * @type {OffsetFunc | [number?,number?]}
+     */
+    export let popperOffset = [0, 8];
     export let isHoverable = false;
-    export let maxWidth: number = null;
-    export let width: number = null;
+    /**
+     * @type {number}
+     */
+    export let maxWidth = null;
+    /**
+     * @type {number}
+     */
+    export let width = null;
     export let isRounded = false;
+    export let isPadded = true;
 
     $: maxWidthStyle = maxWidth ? `max-width: ${maxWidth}px ;` : "";
     $: widthStyle = maxWidth ? `width: ${width}px ;` : "";
     $: roundedStyle = !isRounded ? `border-radius: 0px;` : "";
+    $: paddingStyle = isPadded ? "padding: 12px;" : "";
 
-    $: popperStyles = maxWidthStyle + widthStyle + roundedStyle;
+    $: popperStyles = maxWidthStyle + widthStyle + roundedStyle + paddingStyle;
 
     let showEvents = [];
     let hideEvents = [];
@@ -90,13 +86,7 @@
             triggerRef.children[0].addEventListener(event, hide);
         });
 
-        document.body.appendChild(outsideRef);
-
         outsideRef.addEventListener("click", hide);
-
-        return () => {
-            document.body.removeChild(outsideRef);
-        };
     });
 
     function show() {
@@ -128,7 +118,6 @@
     }
 </script>
 
-<!-- <svelte:window on:resize={()=>popperInstance.update()}/> -->
 <div>
     <span bind:this={triggerRef}>
         <slot name="trigger" />
@@ -138,14 +127,18 @@
         <slot name="popper" />
     </div>
 </div>
-<div id="druids-popover-outside" bind:this={outsideRef}></div>
+
+<div
+    use:portal={"body"}
+    class="druids-popover-outside"
+    bind:this={outsideRef}
+></div>
 
 <style>
     #druids-popover-popper {
         display: none;
         background: #fff;
         color: black;
-        padding: 12px;
         border-radius: 6px;
         box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
         z-index: 999;
@@ -153,7 +146,7 @@
         overflow-y: auto;
     }
 
-    #druids-popover-outside {
+    .druids-popover-outside {
         display: none;
         position: absolute;
         inset: 0;
