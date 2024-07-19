@@ -36,6 +36,7 @@
      * @type {number}
      */
     export let maxWidth = null;
+    export let maxHeight = null;
     /**
      * @type {number}
      */
@@ -44,7 +45,8 @@
     export let isPadded = true;
 
     $: maxWidthStyle = maxWidth ? `max-width: ${maxWidth}px ;` : "";
-    $: widthStyle = maxWidth ? `width: ${width}px ;` : "";
+    $: maxHeightStyle = maxHeight ? `max-height: ${maxHeight}px ;` : "";
+    $: widthStyle = width ? `width: ${width}px ;` : "width: auto;";
     $: roundedStyle = !isRounded ? `border-radius: 0px;` : "";
     $: paddingStyle = isPadded ? "padding: 12px;" : "";
 
@@ -124,7 +126,7 @@
     </span>
 
     <div style={popperStyles} bind:this={popperRef} id="druids-popover-popper">
-        <slot name="popper" />
+        <slot name="popper" {hide} />
     </div>
 </div>
 
@@ -137,19 +139,18 @@
 <style>
     #druids-popover-popper {
         display: none;
-        background: #fff;
-        color: black;
+        background: var(--ui-background);
+        color: var(--ui-text);
         border-radius: 6px;
         box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
         z-index: 999;
         max-height: 300px;
-        overflow-y: auto;
     }
 
     .druids-popover-outside {
         display: none;
         position: absolute;
         inset: 0;
-        z-index: 998;
+        z-index: 989;
     }
 </style>

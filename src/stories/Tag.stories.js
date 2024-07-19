@@ -36,6 +36,14 @@ export const clickable = {
   },
 };
 
+export const clickableWithIcon = {
+  args: {
+    ...Default.args,
+    onClick: true,
+    icon: icon,
+  },
+};
+
 export const deletable = {
   args: {
     ...Default.args,
@@ -46,6 +54,6 @@ export const deletable = {
 export const clickableWithDeletable = {
   args: {
     ...clickable.args,
-    onDelete: () => alert("Clickable"),
+    onDelete: () => alert("Deletable"),
   },
 };

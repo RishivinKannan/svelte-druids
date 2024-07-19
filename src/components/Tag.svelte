@@ -36,13 +36,13 @@
 </script>
 
 <span class="druids-tag-span {sizeClass} " style=" {backgroundColorStyle}">
-    {#if icon}
-        <span style={iconColorStyle} class="druids-tag-icon">
-            <svelte:component this={icon} />
-        </span>
-    {/if}
     {#if onClick}
         <button on:click={onClick} class="druids-tag-clickable">
+            {#if icon}
+                <span style={iconColorStyle} class="druids-tag-icon">
+                    <svelte:component this={icon} />
+                </span>
+            {/if}
             {#if shouldParseKey}
                 {#each labelSplit as labelWord, idx}
                     <span
@@ -59,15 +59,23 @@
             {/if}
         </button>
     {:else if shouldParseKey}
+        {#if icon}
+            <span style={iconColorStyle} class="druids-tag-icon">
+                <svelte:component this={icon} />
+            </span>
+        {/if}
         {#each labelSplit as labelWord, idx}
             <span style={textColorStyle} class="druids-tag-word-{idx + 1}">
                 {labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
             </span>
         {/each}
     {:else}
-        <span style={textColorStyle} class="druids-tag-word-1">
-            {label}</span
-        >style
+        {#if icon}
+            <span style={iconColorStyle} class="druids-tag-icon">
+                <svelte:component this={icon} />
+            </span>
+        {/if}
+        <span style={textColorStyle} class="druids-tag-word-1"> {label}</span>
     {/if}
     {#if onDelete}
         <button on:click={onDelete} class="druids-tag-deletable">X</button>
@@ -86,9 +94,14 @@
         padding: 4px 8px;
     }
     .druids-tag-icon {
-        display: flex;
+        display: inline-flex;
         justify-content: center;
         align-items: center;
+    }
+    .druids-tag-clickable {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
     }
 
     .druids-tag-deletable {
@@ -112,7 +125,6 @@
 
     button {
         all: unset;
-        height: 100%;
         border-radius: 4px;
         display: inline-block;
         padding: 4px 8px;

@@ -5,6 +5,11 @@
     import Tag from "../../components/Tag.svelte";
     import Icon from "../../components/icon.svelte";
     import TagList from "../../components/TagList.svelte";
+    import OverflowList from "../../components/OverflowList.svelte";
+    import Badge from "../../components/Badge.svelte";
+    import UpIcon from "../../components/icons/UpIcon.svelte";
+    import PopoverMenuItem from "../../components/PopoverMenuItem.svelte";
+    import PopoverMenuSection from "../../components/PopoverMenuSection.svelte";
 
     const data = readable([
         { foo: "Winter", bar: 30, baz: true },
@@ -45,6 +50,13 @@
     ></Table>
 </div>
 
-<Tag label="what:why" size="sm" icon={Icon} />
-
-<TagList tags={[{ label: "what:icon", icon: Icon }]} />
+<OverflowList lines={3} maxCount={3} justify="flex-start" alignItems="stretch">
+    {#each Array(10).fill(null) as val, idx (idx)}
+        <Badge count={idx + 1} icon={UpIcon} />
+    {/each}
+</OverflowList>
+<div style="width: 400px;">
+    <PopoverMenuSection header="Section" separator="bottom">
+        <PopoverMenuItem label="Action" danger />
+    </PopoverMenuSection>
+</div>

@@ -35,3 +35,29 @@ export const TagWithIcon = {
     tags: items.map((item) => ({ label: item, icon })),
   },
 };
+
+export const XSmall = {
+  args: {
+    size: "xs",
+    expandType: "inline",
+  },
+};
+
+export const Medium = {
+  args: {
+    size: "md",
+  },
+};
+
+export const Large = {
+  args: {
+    size: "lg",
+  },
+};
+
+export const MaxCount = {
+  args: {
+    size: "sm",
+    lines: 3,
+  },
+};

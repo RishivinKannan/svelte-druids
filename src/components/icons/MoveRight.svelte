@@ -1,0 +1,17 @@
+<svg
+    width={16}
+    height={16}
+    fill="currentColor"
+    viewBox="0 0 1920 1920"
+    xmlns="http://www.w3.org/2000/svg"
+    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+        id="SVGRepo_tracerCarrier"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    ></g><g id="SVGRepo_iconCarrier">
+        <path
+            d="M1805.937 276v1368.756H1920V276h-114.063Zm-739.106 73.765-80.642 80.642 473.02 473.02H0v113.948h1459.208l-473.02 473.02 80.643 80.642 610.694-610.693-610.694-610.58Z"
+            fill-rule="evenodd"
+        ></path>
+    </g></svg
+>

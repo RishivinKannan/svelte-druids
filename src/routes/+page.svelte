@@ -2,7 +2,7 @@
     import { Column } from "svelte-headless-table";
     import Badge from "../components/Badge.svelte";
     import Icon from "../components/icon.svelte";
-    import Link from "../components/link.svelte";
+
     import Popover from "../components/Popover.svelte";
     import Table from "../components/Table.svelte";
     import TagList from "../components/TagList.svelte";
@@ -86,7 +86,6 @@
     />
     <Badge
         label="watchdog"
-        as={Link}
         compProps={{ href: "/yeah!", onClick: (e) => console.log(e) }}
         icon={Icon}
         iconPosition="right"

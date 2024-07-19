@@ -77,6 +77,12 @@
                         ? item.value
                         : { label: item.value },
                 ),
+            plugins: {
+                filter: {
+                    getFilterValue: (value) =>
+                        typeof value === "object" ? value.label : value,
+                },
+            },
         },
     ];
 

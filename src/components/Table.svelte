@@ -33,6 +33,11 @@
     import SettingsIcon from "./icons/SettingsIcon.svelte";
     import Pagination from "./Pagination.svelte";
     import Page from "../routes/+page.svelte";
+    import PopoverMenuItem from "./PopoverMenuItem.svelte";
+    import MoveRight from "./icons/MoveRight.svelte";
+    import MoveLeft from "./icons/MoveLeft.svelte";
+    import HideIcon from "./icons/HideIcon.svelte";
+    import PopoverMenuSection from "./PopoverMenuSection.svelte";
     /**
      * @type {Readable|Writable}
      */
@@ -140,12 +145,14 @@
     }
 
     let { columnIdOrder } = pluginStates.colOrder;
-    $columnIdOrder = initialColumnOrderIds ? initialColumnOrderIds : ids;
+    $columnIdOrder =
+        initialColumnOrderIds.length !== 0 ? initialColumnOrderIds : ids;
 
     function moveColumnToLeft(idx) {
         let oldIdx = idx;
         let newIdx = idx - 1;
         if (idx > 0) $columnIdOrder = moveIndex($columnIdOrder, oldIdx, newIdx);
+        console.log($columnIdOrder);
     }
 
     function moveColumnToRight(idx) {
@@ -215,12 +222,9 @@
                             props={cell.props()}
                             let:props
                         >
-                            <th
-                                {...attrs}
-                                on:click={props.sort.toggle}
-                                use:props.resize
-                            >
-                                <div>
+                            <th {...attrs} use:props.resize>
+                                <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                                <div on:click={props.sort.toggle}>
                                     {#if props.sort.order === "asc"}
                                         <UpIcon />
                                     {:else if props.sort.order === "desc"}
@@ -237,23 +241,48 @@
                                             >
                                                 <SettingsIcon />
                                             </button>
-                                            <div slot="popper">
-                                                <button
-                                                    class="druids-table-dropdown-menu"
-                                                    style="width: 100px;"
-                                                    on:click={() =>
-                                                        moveColumnToLeft(idx)}
+                                            <svelte:fragment
+                                                slot="popper"
+                                                let:hide
+                                            >
+                                                <PopoverMenuSection
+                                                    separator="bottom"
                                                 >
-                                                    Move to Left
-                                                </button>
-                                                <button
-                                                    class="druids-table-dropdown-menu"
-                                                    style="width: 100px;"
-                                                    on:click={() =>
-                                                        moveColumnToRight(idx)}
-                                                    >Move to Right</button
-                                                >
-                                            </div>
+                                                    <PopoverMenuItem
+                                                        label="Move to Left"
+                                                        icon={MoveLeft}
+                                                        width={"200px"}
+                                                        onClick={() => {
+                                                            moveColumnToLeft(
+                                                                idx,
+                                                            );
+                                                            hide();
+                                                        }}
+                                                    />
+                                                    <PopoverMenuItem
+                                                        label="Move to Right"
+                                                        icon={MoveRight}
+                                                        width={"200px"}
+                                                        onClick={() => {
+                                                            moveColumnToRight(
+                                                                idx,
+                                                            );
+                                                            hide();
+                                                        }}
+                                                    />
+                                                </PopoverMenuSection>
+                                                <PopoverMenuItem
+                                                    label="Hide"
+                                                    icon={HideIcon}
+                                                    danger
+                                                    width={"200px"}
+                                                    onClick={() => {
+                                                        hideForId[cell.id] =
+                                                            true;
+                                                        hide();
+                                                    }}
+                                                />
+                                            </svelte:fragment>
                                         </Popover>
                                     </div>
                                 {/if}
