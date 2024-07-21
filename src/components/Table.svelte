@@ -10,7 +10,6 @@
     import "../css/global.css";
     import moveIndex from "../utils/moveIndex";
     import {
-        Column,
         createTable,
         Render,
         Subscribe,
@@ -32,7 +31,6 @@
 
     import SettingsIcon from "./icons/SettingsIcon.svelte";
     import Pagination from "./Pagination.svelte";
-    import Page from "../routes/+page.svelte";
     import PopoverMenuItem from "./PopoverMenuItem.svelte";
     import MoveRight from "./icons/MoveRight.svelte";
     import MoveLeft from "./icons/MoveLeft.svelte";
