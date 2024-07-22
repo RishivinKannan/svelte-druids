@@ -153,6 +153,7 @@
     box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
     z-index: 999;
     max-height: 300px;
+    overflow-y: auto;
   }
 
  /*.druids-popover-outside {*/

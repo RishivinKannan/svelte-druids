@@ -19,6 +19,7 @@
     <OverflowList {...args}>
         {#each Array(30).fill("Badge") as el, idx}
             <Badge label="Badge-{idx}" />
+            
         {/each}
     </OverflowList>
 </Template>

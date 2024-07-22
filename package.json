@@ -29,6 +29,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@popperjs/core": "^2.11.8"
+    "@popperjs/core": "^2.11.8",
+    "@tanstack/match-sorter-utils": "^8.15.1",
+    "@tanstack/svelte-table": "^8.19.3"
   }
 }

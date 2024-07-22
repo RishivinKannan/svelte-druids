@@ -2,10 +2,10 @@
     import { onMount } from "svelte";
 
     import Popover from "./Popover.svelte";
-    import Table from "./Table.svelte";
+    import Table from "./TableOld.svelte";
     import { readable } from "svelte/store";
     import Tag from "./Tag.svelte";
-    import { createRender } from "./Table.svelte";
+    import { createRender } from "./TableOld.svelte";
 
     /**
      *   Array of string | Array of objects which is props of each tag exclude size prop

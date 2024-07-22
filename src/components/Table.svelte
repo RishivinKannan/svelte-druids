@@ -1,171 +1,292 @@
 <script context="module">
-    import { createRender } from "svelte-headless-table";
-    /**
-     * It is an importable function that uses to render the Custom Component.
-     */
-    export { createRender };
+    import {
+        filterFns,
+        getFilteredRowModel,
+        getPaginationRowModel,
+        getSortedRowModel,
+        renderComponent,
+    } from "@tanstack/svelte-table";
+
+    export { renderComponent };
 </script>
 
 <script>
-    import "../css/global.css";
-    import moveIndex from "../utils/moveIndex";
     import {
-        createTable,
-        Render,
-        Subscribe,
-    } from "svelte-headless-table";
-    import {
-        addSortBy,
-        addResizedColumns,
-        addSelectedRows,
-        addTableFilter,
-        addHiddenColumns,
-        addPagination,
-        addColumnOrder,
-    } from "svelte-headless-table/plugins";
+        createSvelteTable,
+        flexRender,
+        getCoreRowModel,
+    } from "@tanstack/svelte-table";
+    import { rankItem } from "@tanstack/match-sorter-utils";
+    import { writable } from "svelte/store";
     import UpIcon from "./icons/UpIcon.svelte";
     import DownIcon from "./icons/DownIcon.svelte";
-    import SelectIndicator from "./SelectIndicator.svelte";
-    import SearchIcon from "./icons/SearchIcon.svelte";
     import Popover from "./Popover.svelte";
-
     import SettingsIcon from "./icons/SettingsIcon.svelte";
-    import Pagination from "./Pagination.svelte";
-    import PopoverMenuItem from "./PopoverMenuItem.svelte";
-    import MoveRight from "./icons/MoveRight.svelte";
-    import MoveLeft from "./icons/MoveLeft.svelte";
-    import HideIcon from "./icons/HideIcon.svelte";
     import PopoverMenuSection from "./PopoverMenuSection.svelte";
-    /**
-     * @type {Readable|Writable}
-     */
+    import PopoverMenuItem from "./PopoverMenuItem.svelte";
+    import MoveLeft from "./icons/MoveLeft.svelte";
+    import MoveRight from "./icons/MoveRight.svelte";
+    import HideIcon from "./icons/HideIcon.svelte";
+    import moveIndex from "../utils/moveIndex";
+    import CheckBox from "./CheckBox.svelte";
+    import SearchIcon from "./icons/SearchIcon.svelte";
+    import PaginationNew from "./PaginationNew.svelte";
+    import { onMount } from "svelte";
+
     export let data;
     /*
      * refer: https://svelte-headless-table.bryanmylee.com/docs/api/create-columns#table-column-columndef-datacolumn
      */
     export let columns = [];
-    export let displays = [];
-    export let groups = [];
     export let selectableRows = false;
     export let globalSearch = true;
-    export let searchPlaceholder = "";
+    export let searchPlaceholder = "Search Globally";
     export let menu = false;
     export let resizeable = false;
     export let dropdown = false;
     export let pagination = false;
     export let initialPageSize = 5;
+    export let initialPageIndex = 0;
     export let initialHiddenColumnIds = [];
     export let initialColumnOrderIds = [];
+    export let localStorageKey = "druids-table-key";
 
-    let table = createTable(data, {
-        sort: addSortBy(),
-        resize: addResizedColumns(),
-        select: addSelectedRows(),
-        filter: addTableFilter(),
-        hide: addHiddenColumns(),
-        colOrder: addColumnOrder({
-            initialColumnOrderIds,
-        }),
-        page: addPagination({
-            initialPageSize: pagination ? initialPageSize : $data.length,
-        }),
-    });
-    let selectCols = [];
-
-    if (selectableRows) {
-        selectCols = [
-            table.display({
-                id: "selected",
-                header: (_, { pluginStates }) => {
-                    const { allRowsSelected, someRowsSelected } =
-                        pluginStates.select;
-                    return createRender(SelectIndicator, {
-                        isSelected: allRowsSelected,
-                        isSomeSubRowsSelected: someRowsSelected,
-                    });
-                },
-                cell: ({ row }, { pluginStates }) => {
-                    const { isSomeSubRowsSelected, isSelected } =
-                        pluginStates.select.getRowState(row);
-                    return createRender(SelectIndicator, {
-                        isSelected,
-                        isSomeSubRowsSelected,
-                    });
-                },
-                plugins: {
-                    resize: {
-                        disable: true,
-                        initialWidth: 30,
-                        maxWidth: 30,
-                    },
-                },
-            }),
-        ];
-    }
-
-    let tableColumns = table.createColumns([
-        ...selectCols,
-        ...displays.map((dis) => table.display(dis)),
-        ...columns.map((column) => table.column(column)),
-        ...groups.map(({ columns, ...rest }) =>
-            table.group({
-                ...rest,
-                columns: columns.map((col) => table.column(col)),
-            }),
-        ),
-    ]);
-
-    let {
-        flatColumns,
-        visibleColumns,
-        headerRows,
-        pageRows,
-        tableAttrs,
-        tableBodyAttrs,
-        pluginStates,
-    } = table.createViewModel(tableColumns);
-
-    let { filterValue } = pluginStates.filter;
-
-    let { pageSize, pageCount, pageIndex, hasPreviousPage, hasNextPage } =
-        pluginStates.page;
-
-    let { hiddenColumnIds } = pluginStates.hide;
-
-    const ids = flatColumns.map((c) => c.id);
-    let hideForId = Object.fromEntries(ids.map((id) => [id, false]));
-    initialHiddenColumnIds.map((col) => (hideForId[col] = true));
-
+    let visibilityKey;
+    let orderKey;
+    let paginationKey;
+    let sizingKey;
     $: {
-        $hiddenColumnIds = Object.entries(hideForId)
-            .filter(([, hide]) => hide)
-            .map(([id]) => id);
+        visibilityKey = `${localStorageKey}-visibility`;
+        orderKey = `${localStorageKey}-order`;
+        paginationKey = `${localStorageKey}-pagination`;
+        sizingKey = `${localStorageKey}-sizing`;
     }
 
-    let { columnIdOrder } = pluginStates.colOrder;
-    $columnIdOrder =
-        initialColumnOrderIds.length !== 0 ? initialColumnOrderIds : ids;
+    let selectColumn = [
+        {
+            id: "select-col",
+            header: ({ table }) =>
+                renderComponent(CheckBox, {
+                    checked: table.getIsAllRowsSelected(),
+                    indeterminate: table.getIsSomeRowsSelected(),
+                    onChange: table.getToggleAllRowsSelectedHandler(),
+                }),
+            cell: ({ row }) =>
+                renderComponent(CheckBox, {
+                    checked: row.getIsSelected(),
+                    disabled: !row.getCanSelect(),
+                    onChange: row.getToggleSelectedHandler(),
+                }),
+            size: 20,
+            enableResizing: false,
+        },
+    ];
+
+    // sorting
+    let sorting = [];
+    const setSorting = (updater) => {
+        if (updater instanceof Function) {
+            sorting = updater(sorting);
+        } else {
+            sorting = updater;
+        }
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                sorting,
+            },
+        }));
+    };
+
+    //column visibility
+    let columnVisibility =
+        initialHiddenColumnIds.length === 0
+            ? {}
+            : Object.fromEntries(
+                  initialHiddenColumnIds.map((id) => [id, false]),
+              );
+
+    const setColumnVisibility = (updater) => {
+        if (updater instanceof Function) {
+            columnVisibility = updater(columnVisibility);
+        } else {
+            columnVisibility = updater;
+        }
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                columnVisibility,
+            },
+        }));
+        localStorage.setItem(
+            visibilityKey,
+            JSON.stringify($table.getState().columnVisibility),
+        );
+    };
+
+    //Column Order
+    let columnOrder = initialColumnOrderIds;
+
+    const setColumnOrder = (updater) => {
+        if (updater instanceof Function) {
+            columnOrder = updater(columnOrder);
+        } else {
+            columnOrder = updater;
+        }
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                columnOrder,
+            },
+        }));
+        localStorage.setItem(
+            orderKey,
+            JSON.stringify($table.getState().columnOrder),
+        );
+    };
 
     function moveColumnToLeft(idx) {
         let oldIdx = idx;
         let newIdx = idx - 1;
-        if (idx > 0) $columnIdOrder = moveIndex($columnIdOrder, oldIdx, newIdx);
-        console.log($columnIdOrder);
+        if (idx > 0)
+            $table.setColumnOrder((_updater) =>
+                moveIndex(
+                    $table.getAllLeafColumns().map((d) => d.id),
+                    oldIdx,
+                    newIdx,
+                ),
+            );
     }
 
     function moveColumnToRight(idx) {
         let oldIdx = idx;
         let newIdx = idx + 1;
 
-        if (idx <= flatColumns.length)
-            $columnIdOrder = moveIndex($columnIdOrder, oldIdx, newIdx);
+        if (idx <= $table.getAllLeafColumns().length)
+            $table.setColumnOrder((_updater) =>
+                moveIndex(
+                    $table.getAllLeafColumns().map((d) => d.id),
+                    oldIdx,
+                    newIdx,
+                ),
+            );
     }
 
-    $: console.log($columnIdOrder);
+    //GobalFilter
+    let gobalFilterValue = "";
+    const fuzzyFilter = (row, columnId, value, addMeta) => {
+        const itemRank = rankItem(row.getValue(columnId), value);
+        addMeta({ itemRank });
 
-    function handleHide(id) {
-        hideForId[id] = !hideForId[id];
-    }
+        return itemRank.passed;
+    };
+
+    //Pagination
+    let paginationValue = !pagination
+        ? { pageIndex: 0, pageSize: data.length }
+        : { pageIndex: initialPageIndex, pageSize: initialPageSize };
+
+    const setPagination = (updater) => {
+        if (updater instanceof Function) {
+            paginationValue = updater(paginationValue);
+        } else {
+            paginationValue = updater;
+        }
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                pagination: paginationValue,
+            },
+        }));
+        // localStorage.setItem(
+        //     paginationKey,
+        //     JSON.stringify($table.getState().pagination),
+        // );
+    };
+
+    //column sizing
+
+    let columnSizing = {};
+
+    const setColumnSizing = (updater) => {
+        if (updater instanceof Function) {
+            columnSizing = updater(columnSizing);
+        } else {
+            columnSizing = updater;
+        }
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                columnSizing,
+            },
+        }));
+        localStorage.setItem(
+            sizingKey,
+            JSON.stringify($table.getState().columnSizing),
+        );
+    };
+
+    const options = writable({
+        data,
+        columns: selectableRows ? [...selectColumn, ...columns] : columns,
+        state: {
+            sorting,
+            columnVisibility,
+            columnOrder,
+            columnSizing,
+            pagination: paginationValue,
+        },
+        filterFns: {
+            fuzzy: fuzzyFilter,
+        },
+        enableResizing: resizeable,
+        columnResizeMode: "onChange",
+        onColumnSizingChange: setColumnSizing,
+        onColumnOrderChange: setColumnOrder,
+        onColumnVisibilityChange: setColumnVisibility,
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        getCoreRowModel: getCoreRowModel(),
+        globalFilterFn: "fuzzy",
+        getFilteredRowModel: getFilteredRowModel(),
+        onPaginationChange: setPagination,
+        getPaginationRowModel: getPaginationRowModel(),
+    });
+
+    const table = createSvelteTable(options);
+
+    const handleKeyUp = (e) => {
+        $table.setGlobalFilter(String(e?.target?.value));
+    };
+
+    onMount(() => {
+        let localVisibility = localStorage.getItem(visibilityKey);
+        let localOrder = localStorage.getItem(orderKey);
+        let localSizing = localStorage.getItem(sizingKey);
+
+        let state = {
+            columnVisibility: localVisibility
+                ? JSON.parse(localVisibility)
+                : columnVisibility,
+
+            columnOrder: localOrder ? JSON.parse(localOrder) : columnOrder,
+
+            columnSizing: localSizing ? JSON.parse(localSizing) : columnSizing,
+
+        };
+        options.update((old) => ({
+            ...old,
+            state: {
+                ...old.state,
+                ...state,
+            },
+        }));
+    });
 </script>
 
 <div class="druids-table-header">
@@ -174,173 +295,181 @@
             <SearchIcon />
             <input
                 type="text"
-                bind:value={$filterValue}
+                bind:value={gobalFilterValue}
+                on:keyup={handleKeyUp}
                 placeholder={searchPlaceholder}
             />
         </div>
     {/if}
 
     {#if menu}
-        <div>
+        <div class="druids-table-menu">
             <Popover isRounded>
                 <button slot="trigger" class="druids-table-settings-trigger">
                     <SettingsIcon />
                 </button>
                 <div slot="popper" class="druids-table-settings">
-                    {#each ids as id (id)}
-                        {#if id == "selected"}
-                            <span></span>
-                        {:else}
-                            <div>
-                                <label for="hide-{id}">{id}</label>
-                                <input
-                                    style="all: set;"
-                                    id="hide-{id}"
-                                    type="checkbox"
-                                    checked={hideForId[id]}
-                                    on:click={() => handleHide(id)}
-                                />
-                            </div>
-                        {/if}
+                    <label>
+                        All
+                        <input
+                            checked={$table.getIsAllColumnsVisible()}
+                            on:change={$table.getToggleAllColumnsVisibilityHandler()}
+                            type="checkbox"
+                        />
+                    </label>
+                    {#each $table.getAllLeafColumns() as column}
+                        <label>
+                            {column.id}
+                            <input
+                                checked={column.getIsVisible()}
+                                on:change={column.getToggleVisibilityHandler()}
+                                type="checkbox"
+                            />
+                        </label>
                     {/each}
                 </div>
             </Popover>
         </div>
     {/if}
 </div>
-<table {...tableAttrs} class="druids-table" cellspacing="0" cellpadding="0">
+<table class="druids-table" cellspacing="0" cellpadding="0">
     <thead class="druids-table-head">
-        {#each $headerRows as headerRow (headerRow.id)}
-            <Subscribe rowAttrs={headerRow.attrs()} let:rowAttrs>
-                <tr {...rowAttrs} class="druids-table-head-row">
-                    {#each headerRow.cells as cell, idx (cell.id)}
-                        <Subscribe
-                            attrs={cell.attrs()}
-                            let:attrs
-                            props={cell.props()}
-                            let:props
-                        >
-                            <th {...attrs} use:props.resize>
-                                <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                                <div on:click={props.sort.toggle}>
-                                    {#if props.sort.order === "asc"}
-                                        <UpIcon />
-                                    {:else if props.sort.order === "desc"}
-                                        <DownIcon />
-                                    {/if}
-                                    <Render of={cell.render()} />
-                                </div>
-                                {#if cell.id !== "selected" && dropdown}
-                                    <div class="druids-table-dropdown">
-                                        <Popover isPadded={false}>
-                                            <button
-                                                slot="trigger"
-                                                class="druids-table-dropdown-trigger"
-                                            >
-                                                <SettingsIcon />
-                                            </button>
-                                            <svelte:fragment
-                                                slot="popper"
-                                                let:hide
-                                            >
-                                                <PopoverMenuSection
-                                                    separator="bottom"
-                                                >
-                                                    <PopoverMenuItem
-                                                        label="Move to Left"
-                                                        icon={MoveLeft}
-                                                        width={"200px"}
-                                                        onClick={() => {
-                                                            moveColumnToLeft(
-                                                                idx,
-                                                            );
-                                                            hide();
-                                                        }}
-                                                    />
-                                                    <PopoverMenuItem
-                                                        label="Move to Right"
-                                                        icon={MoveRight}
-                                                        width={"200px"}
-                                                        onClick={() => {
-                                                            moveColumnToRight(
-                                                                idx,
-                                                            );
-                                                            hide();
-                                                        }}
-                                                    />
-                                                </PopoverMenuSection>
-                                                <PopoverMenuItem
-                                                    label="Hide"
-                                                    icon={HideIcon}
-                                                    danger
-                                                    width={"200px"}
-                                                    onClick={() => {
-                                                        hideForId[cell.id] =
-                                                            true;
-                                                        hide();
-                                                    }}
-                                                />
-                                            </svelte:fragment>
-                                        </Popover>
-                                    </div>
-                                {/if}
-
-                                {#if !props.resize.disabled && resizeable}
-                                    <span
-                                        class="druids-table-resizer resizer"
-                                        use:props.resize.drag
-                                    />
-                                {/if}
-                            </th>
-                        </Subscribe>
-                    {/each}
-                </tr>
-            </Subscribe>
+        {#each $table.getHeaderGroups() as headerGroup}
+            <tr class="druids-table-head-row">
+                {#each headerGroup.headers as header}
+                    <th style="width: {header.getSize()}px">
+                        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                        <div on:click={header.column.getToggleSortingHandler()}>
+                            {#if !header.isPlaceholder}
+                                <svelte:component
+                                    this={flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext(),
+                                    )}
+                                />
+                            {/if}
+                            {#if header.column
+                                .getIsSorted()
+                                .toString() === "asc"}
+                                <UpIcon />
+                            {:else if header.column
+                                .getIsSorted()
+                                .toString() === "desc"}
+                                <DownIcon />
+                            {/if}
+                        </div>
+                        {#if header.column.id !== "select-col" && dropdown}
+                            <div class="druids-table-dropdown">
+                                <Popover isPadded={false}>
+                                    <button
+                                        slot="trigger"
+                                        class="druids-table-dropdown-trigger"
+                                    >
+                                        <SettingsIcon />
+                                    </button>
+                                    <svelte:fragment slot="popper" let:hide>
+                                        <PopoverMenuSection separator="bottom">
+                                            <PopoverMenuItem
+                                                isDisabled={header.column.getIsFirstColumn()}
+                                                label="Move to Left"
+                                                icon={MoveLeft}
+                                                width={"200px"}
+                                                onClick={() => {
+                                                    moveColumnToLeft(
+                                                        header.column.getIndex(),
+                                                    );
+                                                    hide();
+                                                }}
+                                            />
+                                            <PopoverMenuItem
+                                                isDisabled={header.column.getIsLastColumn()}
+                                                label="Move to Right"
+                                                icon={MoveRight}
+                                                width={"200px"}
+                                                onClick={() => {
+                                                    moveColumnToRight(
+                                                        header.column.getIndex(),
+                                                    );
+                                                    hide();
+                                                }}
+                                            />
+                                        </PopoverMenuSection>
+                                        <PopoverMenuItem
+                                            label="Hide"
+                                            isDisabled={!header.column.getCanHide()}
+                                            icon={HideIcon}
+                                            danger
+                                            width={"200px"}
+                                            onClick={(e) => {
+                                                header.column.getToggleVisibilityHandler()(
+                                                    e,
+                                                );
+                                                hide();
+                                            }}
+                                        />
+                                    </svelte:fragment>
+                                </Popover>
+                            </div>
+                        {/if}
+                        {#if header.column.getCanResize()}
+                            <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                            <span
+                                class="druids-table-resizer resizer"
+                                on:dblclick={() => header.column.resetSize()}
+                                on:mousedown={header.getResizeHandler()}
+                                on:touchstart={header.getResizeHandler()}
+                            />
+                        {/if}
+                    </th>
+                {/each}
+            </tr>
         {/each}
     </thead>
-    <tbody {...tableBodyAttrs} class="druids-table-body">
-        {#each $pageRows as row (row.id)}
-            <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-                <tr {...rowAttrs}>
-                    {#each row.cells as cell (cell.id)}
-                        <Subscribe
-                            attrs={cell.attrs()}
-                            props={cell.props()}
-                            let:attrs
-                            let:props
-                        >
-                            <td {...attrs} class:matches={props.filter.matches}>
-                                <Render of={cell.render()} />
-                            </td>
-                        </Subscribe>
-                    {/each}
-                </tr>
-            </Subscribe>
+    <tbody class="druids-table-body">
+        {#each $table.getRowModel().rows as row}
+            <tr>
+                {#each row.getVisibleCells() as cell}
+                    <td style="width: {cell.column.getSize()}px">
+                        <svelte:component
+                            this={flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                            )}
+                        />
+                    </td>
+                {/each}
+            </tr>
         {/each}
     </tbody>
 </table>
 <div class="druids-table-footer">
     {#if pagination}
-        {#if data.length <= 5}
-            <div>
-                <label for="pageSize" class="druids-tabel-select-label"
-                    >Rows per Page:</label
-                >
-                <select id="pageSize" bind:value={$pageSize}>
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={30}>30</option>
-                    <option value={$data.length}>All</option>
-                </select>
-            </div>
-        {/if}
         <div>
-            <Pagination
-                {hasPreviousPage}
-                {hasNextPage}
-                {pageIndex}
-                totalPages={pageCount}
+            <label for="pageSize" class="druids-tabel-select-label"
+                >Rows per Page:</label
+            >
+            <select
+                id="pageSize"
+                value={$table.getState().pagination.pageSize}
+                on:change={(e) => {
+                    $table.setPageSize(Number(e.target.value));
+                }}
+            >
+                {#each [2, 5, 10, 20, 30] as val}
+                    <option value={val}>Show {val}</option>
+                {/each}
+                <option value={data.length}>All</option>
+            </select>
+        </div>
+        <div>
+            <PaginationNew
+                hasPreviousPage={$table.getCanPreviousPage()}
+                hasNextPage={$table.getCanNextPage()}
+                handleNext={$table.nextPage}
+                handlePrev={$table.previousPage}
+                pageIndex={$table.getState().pagination.pageIndex}
+                setPage={$table.setPageIndex}
+                totalPages={$table.getPageCount()}
             />
         </div>
     {/if}
@@ -349,11 +478,10 @@
 <style>
     .druids-table-header,
     .druids-table-footer {
-        width: 100%;
-        max-width: inherit;
         display: flex;
         padding: 4px 0px;
         justify-content: space-between;
+        align-items: center;
     }
 
     .druids-table-footer {
@@ -385,7 +513,7 @@
         all: unset;
     }
 
-    .druids-table-settings div {
+    .druids-table-settings label {
         display: flex;
         justify-content: space-between;
         min-width: 100px;
@@ -407,6 +535,9 @@
         color: var(--ui-text-knockout);
     }
     .druids-table-header-input {
+        width: 50%;
+        min-width: 200px;
+        max-width: 400px;
         padding: 4px;
         display: flex;
         align-items: center;
@@ -417,7 +548,7 @@
 
     .druids-table {
         width: 100%;
-        max-width: inherit;
+        max-width: 100%;
         border: solid 1px var(--ui-border);
         color: var(--ui-text);
         background: var(--ui-background);
@@ -502,11 +633,12 @@
         right: 0;
         width: 2px;
         background: lightgray;
-        cursor: col-resize;
         z-index: 1;
+        cursor: col-resize;
     }
-    .druids-table-resizer:hover {
-        width: 4px;
+    .druids-table-resizer:hover,
+    .druids-table-resizer:focus {
+        width: 6px;
     }
 
     .matches {

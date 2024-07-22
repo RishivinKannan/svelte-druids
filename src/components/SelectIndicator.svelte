@@ -1,6 +1,6 @@
 <script>
     export let isSelected;
-    export let isSomeSubRowsSelected;
+    export let isSomeSubRowsSelected=false;
 
     $: indeterminate = $isSelected ? false : $isSomeSubRowsSelected;
 </script>

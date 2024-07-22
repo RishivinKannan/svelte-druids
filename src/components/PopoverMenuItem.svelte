@@ -63,6 +63,14 @@
         color: var(--ui-text);
         font-weight: normal;
     }
+    .druids-popovermenuitem-button:disabled:hover{
+        background: var(--ui-background-secondary);
+        cursor: not-allowed;
+    }
+
+    .druids-popovermenuitem-button:disabled.druids-popovermenuitem-button:disabled:hover span{
+        color: var(--ui-text-secondary) !important;
+    }
 
     .druids-popovermenuitem-button:hover {
         background: var(--ui-interaction-primary);
