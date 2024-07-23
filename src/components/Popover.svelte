@@ -1,10 +1,6 @@
 <script>
+  import { createPopper, flip, preventOverflow } from "@popperjs/core";
   import { onMount } from "svelte";
-  import { createPopper } from "@popperjs/core";
-  import { flip } from "@popperjs/core";
-  import { preventOverflow } from "@popperjs/core";
-  import Badge from "./Badge.svelte";
-  import { portal } from "./Portal/Portal.svelte";
   import clickOutside from "../utils/clickOutside";
 
   // type Strategy = "absolute" | "fixed";
@@ -45,6 +41,10 @@
   export let width = null;
   export let isRounded = false;
   export let isPadded = true;
+/*
+* This prop is use to open the popper by default.
+*/
+  export let open =false;
 
   $: maxWidthStyle = maxWidth ? `max-width: ${maxWidth}px ;` : "";
   $: maxHeightStyle = maxHeight ? `max-height: ${maxHeight}px ;` : "";
@@ -59,13 +59,13 @@
 
   $: isHoverable
     ? (showEvents = ["mouseenter", "focus"])
-    : (showEvents = ["click", "focus"]);
+    : (showEvents = ["click"]);
   $: isHoverable ? (hideEvents = ["mouseleave", "blur"]) : (hideEvents = []);
 
   let triggerRef;
   let popperRef;
   let popperInstance;
-  let outsideRef;
+  // let outsideRef;
 
   onMount(() => {
     popperInstance = createPopper(triggerRef.children[0], popperRef, {
@@ -90,12 +90,16 @@
       triggerRef.children[0].addEventListener(event, hide);
     });
 
+    if(open){
+      show()
+    }
+
     //outsideRef.addEventListener("click", hide);
   });
 
   function show() {
+
     popperRef.style.display = "block";
-    //if (!isHoverable) outsideRef.style.display = "block";
 
     popperInstance.setOptions((options) => ({
       ...options,
