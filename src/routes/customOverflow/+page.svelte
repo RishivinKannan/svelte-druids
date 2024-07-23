@@ -1,6 +1,7 @@
 <script>
     import Badge from "../../components/Badge.svelte";
 import CustomOverFlowList from "../../components/CustomOverFlowList.svelte";
+    import HighlightCell from "../../components/HighlightCell.svelte";
 
     const propsValue = [
         {
@@ -15,5 +16,12 @@ import CustomOverFlowList from "../../components/CustomOverFlowList.svelte";
         props = [...props, ...propsValue];
     }
 
+    let highlight;
+
 </script>
 <CustomOverFlowList  {props} comp={Badge} accessorKey='label'/>
+
+
+<input type="text" bind:value={highlight}/>
+
+<HighlightCell value={'what the word is   this ?'} {highlight}/>

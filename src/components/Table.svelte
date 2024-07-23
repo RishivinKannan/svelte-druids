@@ -32,6 +32,7 @@
     import SearchIcon from "./icons/SearchIcon.svelte";
     import PaginationNew from "./PaginationNew.svelte";
     import { onMount } from "svelte";
+    import HighlightCell from "./HighlightCell.svelte";
 
     export let data;
     /*
@@ -231,9 +232,27 @@
         );
     };
 
+    $: columnsValue = columns.map((col) => {
+        if (col["cell"] == undefined)
+            return {
+                ...col,
+                cell: (info) =>
+                    renderComponent(HighlightCell, {
+                        value: info.getValue()?.toString()? info.getValue().toString():'',
+                        highlight: info.table.getState().globalFilter,
+                    }),
+            };
+        else {
+            return col;
+        }
+    });
+
+
     const options = writable({
         data,
-        columns: selectableRows ? [...selectColumn, ...columns] : columns,
+        columns: selectableRows
+            ? [...selectColumn, ...columns]
+            : columns,
         state: {
             sorting,
             columnVisibility,
@@ -263,7 +282,6 @@
     const handleKeyUp = (e) => {
         $table.setGlobalFilter(String(e?.target?.value));
     };
-
     onMount(() => {
         let localVisibility = localStorage.getItem(visibilityKey);
         let localOrder = localStorage.getItem(orderKey);
@@ -277,10 +295,10 @@
             columnOrder: localOrder ? JSON.parse(localOrder) : columnOrder,
 
             columnSizing: localSizing ? JSON.parse(localSizing) : columnSizing,
-
         };
         options.update((old) => ({
             ...old,
+            columns:columnsValue,
             state: {
                 ...old.state,
                 ...state,
@@ -610,7 +628,6 @@
         cursor: pointer;
     }
 
-
     .druids-table-resizer {
         position: absolute;
         top: 0;
@@ -625,5 +642,4 @@
     .druids-table-resizer:focus {
         width: 6px;
     }
-
 </style>

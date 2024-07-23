@@ -2,10 +2,10 @@
     import TableNew, { renderComponent } from "../../components/Table.svelte";
     import Tag from "../../components/Tag.svelte";
     const data = [
-        { foo: "Winter", bar: 30, baz: true },
-        { foo: "Spring", bar: 63, baz: false },
-        { foo: "Summer", bar: 92, baz: true },
-        { foo: "Fall", bar: 72 },
+        { foo: "Winter", bar: 30, baz: "true" },
+        { foo: "Spring", bar: 63, baz: "false" },
+        { foo: "Summer", bar: 92, baz: "true" },
+        { foo: "Fall", bar: 72},
     ];
 
     const columns = [
