@@ -2,10 +2,8 @@
     import { onMount } from "svelte";
 
     import Popover from "./Popover.svelte";
-    import Table from "./TableOld.svelte";
-    import { readable } from "svelte/store";
+    import Table,{renderComponent} from "./Table.svelte";
     import Tag from "./Tag.svelte";
-    import { createRender } from "./TableOld.svelte";
 
 
     /**
@@ -61,29 +59,18 @@
      */
     export let tagMaxWidth = null;
 
-    $: tagsData = readable(
-        tags.map((tag) => {
-            return { tag: tag };
-        }),
-    );
+    $: tagsData = tags.map(tag=>typeof tag === 'object'? tag: {label:tag})
+
 
     let columns = [
         {
             header: "Tags",
-            accessor: "tag",
-            cell: (item, state) =>
-                createRender(
+            accessorKey: "label",
+            cell: ({row}) =>
+                renderComponent(
                     Tag,
-                    typeof item.value === "object"
-                        ? item.value
-                        : { label: item.value },
+                    row.original
                 ),
-            plugins: {
-                filter: {
-                    getFilterValue: (value) =>
-                        typeof value === "object" ? value.label : value,
-                },
-            },
         },
     ];
 
