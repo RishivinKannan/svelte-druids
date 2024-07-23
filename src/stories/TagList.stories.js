@@ -1,7 +1,7 @@
 import TagList from "../components/TagList.svelte";
 import icon from "../components/icon.svelte";
 
-let array = ["how", "wow", "what", "why", "sooooo"];
+let array = ["how:how", "wow:wow", "what:what", "why:why", "sooooo:soooooo"];
 let items = [];
 
 for (let i = 0; i < 12; i++) {
@@ -57,7 +57,12 @@ export const Large = {
 
 export const MaxCount = {
   args: {
-    size: "sm",
+    maxCount: 6,
+  },
+};
+
+export const Lines = {
+  args: {
     lines: 3,
   },
 };

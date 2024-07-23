@@ -1,12 +1,9 @@
 <script>
-    import { Column } from "svelte-headless-table";
     import Badge from "../components/Badge.svelte";
     import Icon from "../components/icon.svelte";
 
-    import Popover from "../components/Popover.svelte";
     import Table from "../components/Table.svelte";
     import TagList from "../components/TagList.svelte";
-    import { readable } from "svelte/store";
 
     let array = ["agdagag", "agdagag", "agdagag", "agdaga", "adhlla"];
     let items = [];
@@ -15,20 +12,20 @@
         items = [...items, ...array];
     }
 
-    const data = readable([
+    const data = [
         { name: "Ada Lovelace", age: 21 },
         { name: "Barbara Liskov", age: 52 },
         { name: "Richard Hamming", age: 38 },
-    ]);
+    ];
 
     const columns = [
         {
             header: "Name",
-            accessor: "name",
+            accessorKey: "name",
         },
         {
             header: "Age",
-            accessor: "age",
+            accessorKey: "age",
         },
     ];
 </script>

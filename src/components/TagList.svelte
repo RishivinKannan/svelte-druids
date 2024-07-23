@@ -7,6 +7,7 @@
     import Tag from "./Tag.svelte";
     import { createRender } from "./TableOld.svelte";
 
+
     /**
      *   Array of string | Array of objects which is props of each tag exclude size prop
      *   eg. ['tag','tag'] | [{label:'tag',icon: Icon, iconColor:"black" }]
