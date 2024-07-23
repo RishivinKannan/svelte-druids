@@ -34,10 +34,11 @@ export default {
   excludeStories: /.*Data$/,
   args: {
     data,
-    columns,
-    resizeable: true,
+    columns, 
   },
 };
+
+export const Default = {}
 
 export const withMenuAndDropdown = {
   args: {

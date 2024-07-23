@@ -411,7 +411,7 @@
                                 </Popover>
                             </div>
                         {/if}
-                        {#if header.column.getCanResize()}
+                        {#if header.column.getCanResize() && resizeable}
                             <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
                             <span
                                 class="druids-table-resizer resizer"
@@ -610,21 +610,6 @@
         cursor: pointer;
     }
 
-    .druids-table-dropdown-menu {
-        all: unset;
-        width: 100px;
-        font-size: small;
-        font-weight: normal;
-        padding: 8px;
-        background: var(--ui-background);
-        color: var(--ui-text-secondary);
-        border-bottom: solid 1px var(--ui-border);
-        cursor: pointer;
-    }
-
-    .druids-table-dropdown-menu:disabled {
-        cursor: not-allowed;
-    }
 
     .druids-table-resizer {
         position: absolute;
@@ -641,7 +626,4 @@
         width: 6px;
     }
 
-    .matches {
-        background: var(--ui-interaction-secondary-contrast);
-    }
 </style>
