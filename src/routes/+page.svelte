@@ -102,7 +102,7 @@
 </div>
 <TagList tags={items} lines={2} gapY={10} />
 
-<Table {data} {columns} dropdown></Table>
+
 
 <style>
     .container {
