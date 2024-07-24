@@ -52,8 +52,8 @@
      * // refer above.
      * 
      * // Value will be html dom elements. 
-     * so, The best would be use Badge,Tag,StatusPill etc.., 
-     * or else use render the Component that will render {@html value} //
+     * so, The best would be to use Badge,Tag,StatusPill etc.., 
+     * or else  render the Component that will render {@html value} //
      */
     export let columns = [];
     export let selectableRows = false;
