@@ -7,10 +7,10 @@ export default {
   tags: ["autodocs"],
   excludeStories: /.*Data$/,
   argTypes: {
-    // iconPosition: {
-    //   control: { type: "select" },
-    //   options: ["left", "right"],
-    // },
+    iconPosition: {
+      control: { type: "select" },
+      options: ["left", "right"],
+    },
     title:{
       control:{type:"text"}
     },

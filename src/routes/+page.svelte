@@ -1,7 +1,9 @@
 <script>
     import Badge from "../components/Badge.svelte";
+    import ChangePill from "../components/ChangePill.svelte";
     import HttpStatusPill from "../components/HttpStatusPill.svelte";
     import Icon from "../components/icon.svelte";
+    import StatusPill from "../components/StatusPill.svelte";
 
     import TagList from "../components/TagList.svelte";
 
@@ -108,7 +110,9 @@
 <input type="number" bind:value={statusCode}>
 
 
-<HttpStatusPill {statusCode} hasTextDescription size=""/>
+<ChangePill value='200' suffix='%' direction='up' level='success'/>
+
+<StatusPill label='what' count={99}/>
 
 
 

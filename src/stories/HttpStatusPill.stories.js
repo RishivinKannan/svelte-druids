@@ -1,4 +1,4 @@
-import { Controls } from "@storybook/blocks";
+
 import HttpStatusPill from "../components/HttpStatusPill.svelte";
 
 export default {
