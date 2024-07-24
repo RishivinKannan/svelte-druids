@@ -1,8 +1,8 @@
 <script>
     import Badge from "../components/Badge.svelte";
+    import HttpStatusPill from "../components/HttpStatusPill.svelte";
     import Icon from "../components/icon.svelte";
 
-    import Table from "../components/Table.svelte";
     import TagList from "../components/TagList.svelte";
 
     let array = ["agdagag", "agdagag", "agdagag", "agdaga", "adhlla"];
@@ -28,6 +28,8 @@
             accessorKey: "age",
         },
     ];
+
+    let statusCode=200;
 </script>
 
 <div class="container">
@@ -101,6 +103,12 @@
     />
 </div>
 <TagList tags={items} lines={2} gapY={10} />
+
+
+<input type="number" bind:value={statusCode}>
+
+
+<HttpStatusPill {statusCode} hasTextDescription size=""/>
 
 
 
