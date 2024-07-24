@@ -49,12 +49,12 @@
                         style={textColorStyle}
                         class="druids-tag-word-{idx + 1}"
                     >
-                        {labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
+                        {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
                     </span>
                 {/each}
             {:else}
                 <span style={textColorStyle} class="druids-tag-word-1">
-                    {label}</span
+                    {@html label}</span
                 >
             {/if}
         </button>
@@ -66,7 +66,7 @@
         {/if}
         {#each labelSplit as labelWord, idx}
             <span style={textColorStyle} class="druids-tag-word-{idx + 1}">
-                {labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
+                {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
             </span>
         {/each}
     {:else}
@@ -75,7 +75,9 @@
                 <svelte:component this={icon} />
             </span>
         {/if}
-        <span style={textColorStyle} class="druids-tag-word-1"> {label}</span>
+        <span style={textColorStyle} class="druids-tag-word-1">
+            {@html label}</span
+        >
     {/if}
     {#if onDelete}
         <button on:click={onDelete} class="druids-tag-deletable">X</button>
@@ -92,6 +94,7 @@
         background: var(--ui-tag-background);
         color: var(--ui-text-tertiary);
         padding: 4px 8px;
+        font-size: small;
     }
     .druids-tag-icon {
         display: inline-flex;

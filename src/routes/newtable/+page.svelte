@@ -1,6 +1,6 @@
 <script>
     import TableNew, { renderComponent } from "../../components/Table.svelte";
-    import Tag from "../../components/Tag.svelte";
+    import StatusPill from "../../components/StatusPill.svelte";
     const data = [
         { foo: "Winter", bar: 30, baz: "true" },
         { foo: "Spring", bar: 63, baz: "false" },
@@ -12,8 +12,8 @@
         {
             header: "Season",
             accessorKey: "foo",
-            cell: (item) => {
-                return renderComponent(Tag, { label: item.getValue() });
+            render: ({value}) => {
+                return renderComponent(StatusPill, { label: value,level:'success',isSoft:true });
             },
         },
         {
@@ -32,5 +32,5 @@
 
 <input type="checkbox" bind:checked={toggle}>
 {#if toggle }
-<TableNew {...{ columns, data }} pagination menu dropdown/>
+<TableNew {...{ columns, data }} pagination menu dropdown selectableRows/>
 {/if}

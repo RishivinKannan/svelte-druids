@@ -45,3 +45,7 @@
     --ui-status-other-contrast: #585f70;
     --ui-status-other-soft: #eff1f5;
 }
+
+.druids-highlight-match{
+    background: #FFF5BA;
+}

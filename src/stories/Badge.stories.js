@@ -18,7 +18,7 @@ export default {
       options: ["left", "right"],
     },
     size: {
-      control: { type: "select" },
+      control: { type: "radio" },
       options: ["xs", "sm", "md", "lg"],
     },
     level: {

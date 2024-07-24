@@ -75,7 +75,9 @@
                 </span>
             {/if}
         {:else}
-            {label}
+            <span>
+                {@html label}
+            </span>
         {/if}
 
         {#if iconPosition == "right"}
@@ -103,7 +105,9 @@
                     </span>
                 {/if}
             {:else}
-                {label}
+                <span>
+                    {@html label}
+                </span>
             {/if}
 
             {#if iconPosition == "right"}

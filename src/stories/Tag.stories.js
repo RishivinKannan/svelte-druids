@@ -14,7 +14,7 @@ export default {
     textColor: { control: "color" },
     iconColor: { control: "color" },
     size: {
-      control: { type: "select" },
+      control: { type: "radio" },
       options: ["xs", "sm", "md", "lg"],
     },
   },

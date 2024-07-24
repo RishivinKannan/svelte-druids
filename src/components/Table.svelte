@@ -1,6 +1,5 @@
 <script context="module">
     import {
-        filterFns,
         getFilteredRowModel,
         getPaginationRowModel,
         getSortedRowModel,
@@ -11,32 +10,50 @@
 </script>
 
 <script>
+    import { rankItem } from "@tanstack/match-sorter-utils";
     import {
         createSvelteTable,
         flexRender,
         getCoreRowModel,
     } from "@tanstack/svelte-table";
-    import { rankItem } from "@tanstack/match-sorter-utils";
+    import { onMount } from "svelte";
     import { writable } from "svelte/store";
-    import UpIcon from "./icons/UpIcon.svelte";
-    import DownIcon from "./icons/DownIcon.svelte";
-    import Popover from "./Popover.svelte";
-    import SettingsIcon from "./icons/SettingsIcon.svelte";
-    import PopoverMenuSection from "./PopoverMenuSection.svelte";
-    import PopoverMenuItem from "./PopoverMenuItem.svelte";
-    import MoveLeft from "./icons/MoveLeft.svelte";
-    import MoveRight from "./icons/MoveRight.svelte";
-    import HideIcon from "./icons/HideIcon.svelte";
     import moveIndex from "../utils/moveIndex";
     import CheckBox from "./CheckBox.svelte";
+    import HighlightCell, { highlightWords } from "./HighlightCell.svelte";
+    import DownIcon from "./icons/DownIcon.svelte";
+    import HideIcon from "./icons/HideIcon.svelte";
+    import MoveLeft from "./icons/MoveLeft.svelte";
+    import MoveRight from "./icons/MoveRight.svelte";
     import SearchIcon from "./icons/SearchIcon.svelte";
+    import SettingsIcon from "./icons/SettingsIcon.svelte";
+    import UpIcon from "./icons/UpIcon.svelte";
     import PaginationNew from "./PaginationNew.svelte";
-    import { onMount } from "svelte";
-    import HighlightCell from "./HighlightCell.svelte";
+    import Popover from "./Popover.svelte";
+    import PopoverMenuItem from "./PopoverMenuItem.svelte";
+    import PopoverMenuSection from "./PopoverMenuSection.svelte";
 
     export let data;
     /*
-     * refer: https://svelte-headless-table.bryanmylee.com/docs/api/create-columns#table-column-columndef-datacolumn
+     * refer: https://tanstack.com/table/latest/docs/api/core/column-def
+     * Additionally, You can specify render function in ColumnDef which will help with highlight letter when global search.
+     * 
+     * eg. [{
+     *  ...default,
+     * 
+     *  // Don't specify cell when you use render because cell has high priority.//
+     * 
+     *  render:({value,props})=>renderComponent(Component,CompProps),
+     * 
+     * }]
+     * 
+     * //typeof props is {table: Table<TData>,row: Row<TData>,column: Column<TData>,cell: Cell<TData>,getValue: () => any,renderValue: () => any}
+     * 
+     * // refer above.
+     * 
+     * // Value will be html dom elements. 
+     * so, The best would be use Badge,Tag,StatusPill etc.., 
+     * or else use render the Component that will render {@html value} //
      */
     export let columns = [];
     export let selectableRows = false;
@@ -50,38 +67,41 @@
     export let initialPageIndex = 0;
     export let initialHiddenColumnIds = [];
     export let initialColumnOrderIds = [];
-    export let localStorageKey = "druids-table-key";
+
+    /**
+     * It is use to store the state of table in localStorage. Optional.
+     * @type {string}
+     */
+    export let localStorageKey = null;
 
     let visibilityKey;
     let orderKey;
     let paginationKey;
     let sizingKey;
-    $: {
+    $: if (localStorageKey) {
         visibilityKey = `${localStorageKey}-visibility`;
         orderKey = `${localStorageKey}-order`;
         paginationKey = `${localStorageKey}-pagination`;
         sizingKey = `${localStorageKey}-sizing`;
     }
 
-    let selectColumn = [
-        {
-            id: "select-col",
-            header: ({ table }) =>
-                renderComponent(CheckBox, {
-                    checked: table.getIsAllRowsSelected(),
-                    indeterminate: table.getIsSomeRowsSelected(),
-                    onChange: table.getToggleAllRowsSelectedHandler(),
-                }),
-            cell: ({ row }) =>
-                renderComponent(CheckBox, {
-                    checked: row.getIsSelected(),
-                    disabled: !row.getCanSelect(),
-                    onChange: row.getToggleSelectedHandler(),
-                }),
-            size: 20,
-            enableResizing: false,
-        },
-    ];
+    let selectColumn = {
+        id: "select-col",
+        header: ({ table }) =>
+            renderComponent(CheckBox, {
+                checked: table.getIsAllRowsSelected(),
+                indeterminate: table.getIsSomeRowsSelected(),
+                onChange: table.getToggleAllRowsSelectedHandler(),
+            }),
+        cell: ({ row }) =>
+            renderComponent(CheckBox, {
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                onChange: row.getToggleSelectedHandler(),
+            }),
+        size: 20,
+        enableResizing: false,
+    };
 
     // sorting
     let sorting = [];
@@ -121,10 +141,12 @@
                 columnVisibility,
             },
         }));
-        localStorage.setItem(
-            visibilityKey,
-            JSON.stringify($table.getState().columnVisibility),
-        );
+        if (localStorageKey) {
+            localStorage.setItem(
+                visibilityKey,
+                JSON.stringify($table.getState().columnVisibility),
+            );
+        }
     };
 
     //Column Order
@@ -143,10 +165,12 @@
                 columnOrder,
             },
         }));
-        localStorage.setItem(
-            orderKey,
-            JSON.stringify($table.getState().columnOrder),
-        );
+        if (localStorageKey) {
+            localStorage.setItem(
+                orderKey,
+                JSON.stringify($table.getState().columnOrder),
+            );
+        }
     };
 
     function moveColumnToLeft(idx) {
@@ -203,10 +227,13 @@
                 pagination: paginationValue,
             },
         }));
-        // localStorage.setItem(
-        //     paginationKey,
-        //     JSON.stringify($table.getState().pagination),
-        // );
+        // if(localStorageKey){
+
+        //     localStorage.setItem(
+        //         paginationKey,
+        //         JSON.stringify($table.getState().pagination),
+        //     );
+        // }
     };
 
     //column sizing
@@ -226,33 +253,46 @@
                 columnSizing,
             },
         }));
-        localStorage.setItem(
-            sizingKey,
-            JSON.stringify($table.getState().columnSizing),
-        );
+        if (localStorageKey) {
+            localStorage.setItem(
+                sizingKey,
+                JSON.stringify($table.getState().columnSizing),
+            );
+        }
     };
 
     $: columnsValue = columns.map((col) => {
-        if (col["cell"] == undefined)
+        if (col["cell"] !== undefined) {
+            return col;
+        } else if (col["render"] !== undefined) {
+            return {
+                ...col,
+                cell: (info) =>
+                    col.render({
+                        value: highlightWords(
+                            info.getValue(),
+                            info.table.getState().globalFilter,
+                        ),
+                        props: info,
+                    }),
+            };
+        } else {
             return {
                 ...col,
                 cell: (info) =>
                     renderComponent(HighlightCell, {
-                        value: info.getValue()?.toString()? info.getValue().toString():'',
+                        value: info.getValue()?.toString()
+                            ? info.getValue().toString()
+                            : "",
                         highlight: info.table.getState().globalFilter,
                     }),
             };
-        else {
-            return col;
         }
     });
 
-
     const options = writable({
         data,
-        columns: selectableRows
-            ? [...selectColumn, ...columns]
-            : columns,
+        columns: selectableRows ? [selectColumn, ...columns] : columns,
         state: {
             sorting,
             columnVisibility,
@@ -283,22 +323,29 @@
         $table.setGlobalFilter(String(e?.target?.value));
     };
     onMount(() => {
-        let localVisibility = localStorage.getItem(visibilityKey);
-        let localOrder = localStorage.getItem(orderKey);
-        let localSizing = localStorage.getItem(sizingKey);
+        let state = {};
+        if (localStorageKey) {
+            let localVisibility = localStorage.getItem(visibilityKey);
+            let localOrder = localStorage.getItem(orderKey);
+            let localSizing = localStorage.getItem(sizingKey);
 
-        let state = {
-            columnVisibility: localVisibility
-                ? JSON.parse(localVisibility)
-                : columnVisibility,
+            state = {
+                columnVisibility: localVisibility
+                    ? JSON.parse(localVisibility)
+                    : columnVisibility,
 
-            columnOrder: localOrder ? JSON.parse(localOrder) : columnOrder,
+                columnOrder: localOrder ? JSON.parse(localOrder) : columnOrder,
 
-            columnSizing: localSizing ? JSON.parse(localSizing) : columnSizing,
-        };
+                columnSizing: localSizing
+                    ? JSON.parse(localSizing)
+                    : columnSizing,
+            };
+        }
         options.update((old) => ({
             ...old,
-            columns:columnsValue,
+            columns: selectableRows
+                ? [selectColumn, ...columnsValue]
+                : columnsValue,
             state: {
                 ...old.state,
                 ...state,

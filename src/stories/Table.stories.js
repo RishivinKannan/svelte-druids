@@ -1,6 +1,7 @@
 
-import TableNew,{renderComponent} from "../components/Table.svelte"
+import TableNew, { renderComponent } from "../components/Table.svelte"
 import Tag from "../components/Tag.svelte";
+import StatusPill from "../components/StatusPill.svelte"
 
 const data = [
   { foo: "Winter", bar: 30, baz: true },
@@ -11,19 +12,24 @@ const data = [
 
 const columns = [
   {
+    header:'',
+    accessorKey: "baz",
+    cell: (info) => renderComponent(StatusPill, {
+      level: info.getValue() !== undefined ? info.getValue() ? 'success' : 'danger' : 'warning',
+      hasAutoheight: true
+    }),
+    maxSize:5
+  },
+  {
     header: "Season",
     accessorKey: "foo",
-    cell: (item) => {
-      return renderComponent(Tag, { label: item.getValue() });
+    render: ({ value }) => {
+      return renderComponent(Tag, { label: value });
     },
   },
   {
     header: "Avg. temp",
     accessorKey: "bar",
-  },
-  {
-    header: "Baz",
-    accessorKey: "baz",
   },
 ];
 
@@ -34,7 +40,7 @@ export default {
   excludeStories: /.*Data$/,
   args: {
     data,
-    columns, 
+    columns,
   },
 };
 
@@ -47,3 +53,11 @@ export const withMenuAndDropdown = {
     resizeable: true,
   },
 };
+
+
+export const withLocalstorage ={
+  args:{
+    ...withMenuAndDropdown.args,
+    localStorageKey:'withLocalstorageTable'
+  }
+}
