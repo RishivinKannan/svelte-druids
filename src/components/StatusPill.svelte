@@ -36,7 +36,7 @@
               ? ""
               : "height: 20px;"
           : "";
-    $: widthStyle = isFullWidth ? "width: 100%" : "";
+    $: widthStyle = isFullWidth ? "width: 100%;justify-content:center;" : "";
 
     $: levelClass = `druids-statuspill-${level}`;
 
@@ -84,16 +84,16 @@
 </span>
 
 <style>
-    .druids-statuspill-size-xs {
+    .druids-statuspill.druids-statuspill-size-xs {
         font-size: x-small;
     }
-    .druids-statuspill-size-sm {
+    .druids-statuspill.druids-statuspill-size-sm {
         font-size: small;
     }
-    .druids-statuspill-size-md {
+    .druids-statuspill.druids-statuspill-size-md {
         font-size: medium;
     }
-    .druids-statuspill-size-lg {
+    .druids-statuspill.druids-statuspill-size-lg {
         font-size: larger;
     }
 

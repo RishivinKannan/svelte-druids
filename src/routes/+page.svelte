@@ -3,9 +3,11 @@
     import ChangePill from "../components/ChangePill.svelte";
     import HttpStatusPill from "../components/HttpStatusPill.svelte";
     import Icon from "../components/icon.svelte";
+    import DownIcon from "../components/icons/DownIcon.svelte";
     import StatusPill from "../components/StatusPill.svelte";
 
     import TagList from "../components/TagList.svelte";
+    import TimePill from "../components/TimePill.svelte";
 
     let array = ["agdagag", "agdagag", "agdagag", "agdaga", "adhlla"];
     let items = [];
@@ -113,6 +115,8 @@
 <ChangePill value='200' suffix='%' direction='up' level='success'/>
 
 <StatusPill label='what' count={99}/>
+
+<TimePill msPeriod={statusCode} level='success' size='md'/>
 
 
 
