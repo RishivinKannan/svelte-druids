@@ -23,6 +23,7 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "storybook": "^8.2.4",
+    "storybook-dark-mode": "^4.0.2",
     "svelte": "^4.2.7",
     "svelte-headless-table": "^0.18.2",
     "vite": "^5.0.3"

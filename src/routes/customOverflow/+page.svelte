@@ -1,6 +1,8 @@
 <script>
     import Badge from "../../components/Badge.svelte";
+    import CalloutTag from "../../components/CalloutTag.svelte";
 import CustomOverFlowList from "../../components/CustomOverFlowList.svelte";
+    import Icon from "../../components/icon.svelte";
 
     import StatusPill from "../../components/StatusPill.svelte";
 
@@ -26,5 +28,5 @@ import CustomOverFlowList from "../../components/CustomOverFlowList.svelte";
 
 <div>
 
-    <StatusPill  level="danger"/>
+    <CalloutTag tagKey='Clicking me will' tagValue={['Create the components']}/>
 </div>
