@@ -196,7 +196,6 @@
                 <Popover maxWidth={300}>
                     <button
                         slot="trigger"
-                        style="background-color: inherit;"
                         id="overflow-indicator"
                         class="druids-taglist-overflow-indicator"
                         >+{tags.length - rendertags.length}</button
@@ -269,6 +268,8 @@
     }
 
     .druids-taglist-overflow-indicator {
+        background: var(--ui-background-elevated);
+        color: var(--ui-text);
         margin-left: 4px;
         font-style: italic;
         border: solid 2px var(--ui-border);

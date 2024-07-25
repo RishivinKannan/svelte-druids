@@ -14,7 +14,12 @@
     --ui-placeholder: #edf0f4;
     --ui-ai-background-primary: #f2ecfc;
     --ui-ai-background-secondary: #eaf6fc;
+
+
+
     --ui-tag-background: #f4f4f5;
+
+    --ui-tag-text-value: #0C3472;
 
     --ui-text: #202f38;
     --ui-text-secondary: #656f75;
@@ -46,6 +51,58 @@
     --ui-status-other-soft: #eff1f5;
 }
 
-.druids-highlight-match{
+
+
+body.dark {
+
+    --ui-background: #1D1C1F;
+    --ui-background-secondary: #222126;
+    --ui-background-elevated: #222126;
+    --ui-background-shade: #3B393D;
+    --ui-border: #3B393D;
+    --ui-border-elevated: #272626;
+    --ui-placeholder: #282728;
+    --ui-ai-background-primary: #1F0936;
+    --ui-ai-background-secondary: #222126;
+
+
+    --ui-tag-background: #2C2B2B;
+
+    --ui-tag-text-value: #6881A2;
+
+
+
+    --ui-text: #C9C9C9;
+    --ui-text-secondary: #909091;
+    --ui-text-tertiary: #737274;
+    --ui-text-disabled: #535255;
+    --ui-text-knockout: #FFFFFF;
+    --ui-icon: #89898A;
+    --ui-icon-secondary: #6A696B;
+    --ui-ai-primary: #B973FF;
+
+    --ui-interaction-primary: #3D8BD0;
+    --ui-interaction-primary-contrast: #579FDD;
+    --ui-interaction-secondary: #091222;
+    --ui-interaction-secondary-contrast: #0E1D36;
+    --ui-interaction-callout: #E50089;
+    --ui-interaction-callout-contrast: #33001E;
+
+    --ui-status-danger: #D33043;
+    --ui-status-danger-contrast: #EB364B;
+    --ui-status-danger-soft: #2F0A0F;
+    --ui-status-warning: #CC9022;
+    --ui-status-warning-contrast: #E5A226;
+    --ui-status-warning-soft: #332408;
+    --ui-status-success: #349C50;
+    --ui-status-success-contrast: #349C50;
+    --ui-status-success-soft: #0D2714;
+    --ui-status-other: #65626A;
+    --ui-status-other-contrast: #858387;
+    --ui-status-other-soft: #2C2B2B;
+
+}
+
+.druids-highlight-match {
     background: #FFF5BA;
 }

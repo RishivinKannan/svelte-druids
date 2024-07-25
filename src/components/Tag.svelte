@@ -137,7 +137,7 @@
         color: var(--ui-text-tertiary);
     }
     .druids-tag-word-2 {
-        color: var(--ui-ai-primary);
+        color: var(--ui-tag-text-value);
     }
     .druids-tag-size-xs {
         font-size: x-small;

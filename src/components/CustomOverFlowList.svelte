@@ -153,7 +153,6 @@
             <Popover maxWidth={300}>
                 <button
                     slot="trigger"
-                    style="background-color: inherit;"
                     bind:this={overflowIndicatorRef}
                     class="druids-customOverflow-overflow-indicator"
                     >+{props.length - renderElements.length}</button
@@ -214,6 +213,8 @@
     }
 
     .druids-customOverflow-overflow-indicator {
+        background: var(--ui-background-elevated);
+        color: var(--ui-text);
         margin-left: 4px;
         font-style: italic;
         border: solid 2px var(--ui-border);

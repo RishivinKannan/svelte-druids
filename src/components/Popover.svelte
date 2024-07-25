@@ -41,10 +41,10 @@
   export let width = null;
   export let isRounded = false;
   export let isPadded = true;
-/*
-* This prop is use to open the popper by default.
-*/
-  export let open =false;
+  /*
+   * This prop is use to open the popper by default.
+   */
+  export let open = false;
 
   $: maxWidthStyle = maxWidth ? `max-width: ${maxWidth}px ;` : "";
   $: maxHeightStyle = maxHeight ? `max-height: ${maxHeight}px ;` : "";
@@ -90,15 +90,23 @@
       triggerRef.children[0].addEventListener(event, hide);
     });
 
-    if(open){
-      show()
+    if (open) {
+      show();
     }
 
     //outsideRef.addEventListener("click", hide);
+
+    return () => {
+      showEvents.forEach((event) => {
+        triggerRef.children[0].removeEventListener(event, show);
+      });
+      hideEvents.forEach((event) => {
+        triggerRef.children[0].removeEventListener(event, hide);
+      });
+    };
   });
 
   function show() {
-
     popperRef.style.display = "block";
 
     popperInstance.setOptions((options) => ({
@@ -160,10 +168,10 @@
     overflow-y: auto;
   }
 
- /*.druids-popover-outside {*/
- /*   display: none;*/
- /*   position: absolute;*/
- /*   inset: 0;*/
- /*   z-index: 989;*/
- /* }*/
+  /*.druids-popover-outside {*/
+  /*   display: none;*/
+  /*   position: absolute;*/
+  /*   inset: 0;*/
+  /*   z-index: 989;*/
+  /* }*/
 </style>
