@@ -576,15 +576,19 @@
 
     .druids-table-header input[type="text"] {
         all: unset;
+        color: var(--ui-text);
     }
 
+    .druids-table-header input::placeholder{
+        color:var(--ui-icon)
+    }
     .druids-table-settings label {
         display: flex;
         justify-content: space-between;
         min-width: 100px;
         gap: 4px;
     }
-
+    
     .druids-table-settings-trigger {
         all: unset;
         padding: 4px;
@@ -592,6 +596,7 @@
         justify-content: center;
         align-items: center;
         border-radius: 6px;
+        color: var(--ui-icon);
     }
 
     .druids-table-settings-trigger:hover,
@@ -609,6 +614,7 @@
         gap: 4px;
         border: solid 1px var(--ui-border);
         border-radius: 4px;
+        color: var(--ui-icon)
     }
 
     .druids-table {
