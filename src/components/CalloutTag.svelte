@@ -98,7 +98,7 @@
         color: var(--ui-text);
         border-radius: 2px;
         outline: solid 1px var(--ui-border);
-        font-size: smaller;
+        font-size: small;
     }
 
     .druids-calloutTag-button:hover {
@@ -119,7 +119,7 @@
         justify-content: space-between;
         align-items: center;
         font-weight: bold;
-        font-size: smaller;
+        font-size: small;
     }
     .druids-calloutTag-info {
         color: var(--ui-interaction-primary);
@@ -133,6 +133,6 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: smaller;
+        font-size: small;
     }
 </style>
