@@ -19,6 +19,9 @@ export default {
 };
 
 export const Default = {
+  args: {
+    url: "https://druids.datadoghq.com/components/misc/HttpRequestBar"
+  }
 };
 
 export const WithQueries = {
@@ -36,7 +39,7 @@ export const WithFullWidth = {
   args: {
     statusCode: 200,
     method: "GET",
-    url: "https://google.com",
+    url: "https://druids.datadoghq.com/components/misc/HttpRequestBar",
     queryParams:{
       "q": "higoogle"
     },

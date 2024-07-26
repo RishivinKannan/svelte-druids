@@ -23,7 +23,9 @@
 
     const copyFunction = () => {
         const query = new URLSearchParams(queryParams);
-        const URL = url + `?${query.toString()}`;
+        const queryString =
+            Object.keys(queryParams).length !== 0 ? `?${query.toString()}` : "";
+        const URL = url + queryString;
         navigator.clipboard
             .writeText(URL)
             .then(() => alert("URL copied to your clipboard"));

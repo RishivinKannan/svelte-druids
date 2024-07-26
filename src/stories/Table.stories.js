@@ -18,7 +18,7 @@ const columns = [
       level: info.getValue() !== undefined ? info.getValue() ? 'success' : 'danger' : 'warning',
       hasAutoheight: true
     }),
-    maxSize:5
+    maxSize:5,
   },
   {
     header: "Season",
