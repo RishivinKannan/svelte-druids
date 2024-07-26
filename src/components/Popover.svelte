@@ -29,6 +29,7 @@
    */
   export let popperOffset = [0, 8];
   export let isHoverable = false;
+  export let shouldVisible = true;
   /**
    * @type {number}
    */
@@ -52,7 +53,7 @@
   $: roundedStyle = !isRounded ? `border-radius: 0px;` : "";
   $: paddingStyle = isPadded ? "padding: 12px;" : "";
 
-  $: popperStyles = maxWidthStyle + widthStyle + roundedStyle + paddingStyle;
+  $: popperStyles = maxWidthStyle + widthStyle + roundedStyle + paddingStyle + maxHeightStyle;
 
   let showEvents = [];
   let hideEvents = [];
@@ -107,17 +108,19 @@
   });
 
   function show() {
-    popperRef.style.display = "block";
+    if (shouldVisible) {
+      popperRef.style.display = "block";
 
-    popperInstance.setOptions((options) => ({
-      ...options,
-      modifiers: [
-        ...options.modifiers,
-        { name: "eventListeners", enabled: true },
-      ],
-    }));
+      popperInstance.setOptions((options) => ({
+        ...options,
+        modifiers: [
+          ...options.modifiers,
+          { name: "eventListeners", enabled: true },
+        ],
+      }));
 
-    popperInstance.update();
+      popperInstance.update();
+    }
   }
 
   function hide() {
@@ -134,20 +137,18 @@
   }
 </script>
 
-<div>
-  <span bind:this={triggerRef}>
-    <slot name="trigger" />
-  </span>
+<span bind:this={triggerRef}>
+  <slot name="trigger" />
+</span>
 
-  <div
-    style={popperStyles}
-    on:outside={hide}
-    use:clickOutside
-    bind:this={popperRef}
-    id="druids-popover-popper"
-  >
-    <slot name="popper" {hide} />
-  </div>
+<div
+  style={popperStyles}
+  on:outside={hide}
+  use:clickOutside
+  bind:this={popperRef}
+  id="druids-popover-popper"
+>
+  <slot name="popper" {hide} />
 </div>
 
 <!-- <div
@@ -166,6 +167,8 @@
     z-index: 999;
     max-height: 300px;
     overflow-y: auto;
+    overflow-x: hidden;
+    text-wrap: wrap;
   }
 
   /*.druids-popover-outside {*/

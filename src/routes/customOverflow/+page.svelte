@@ -1,32 +1,12 @@
 <script>
-    import Badge from "../../components/Badge.svelte";
-    import CalloutTag from "../../components/CalloutTag.svelte";
-import CustomOverFlowList from "../../components/CustomOverFlowList.svelte";
-    import Icon from "../../components/icon.svelte";
-
-    import StatusPill from "../../components/StatusPill.svelte";
-
-    const propsValue = [
-        {
-            label:'badge',
-            size:'md'
-        }
-    ]
-
-    let props=[];
-
-    for (let i = 0; i < 8; i++) {
-        props = [...props, ...propsValue];
-    }
-
-    let highlight;
-
+    import HttpRequestBar from "../../components/HttpRequestBar.svelte";
+    import Overflower from "../../components/Overflower.svelte";
+    import Tag from "../../components/Tag.svelte";
 </script>
-<CustomOverFlowList  {props} comp={Badge} accessorKey='label'/>
+
+<HttpRequestBar statusCode={200} url='https://druids.datadoghq.com/components/layout/Overflower?example5_state=N4IglgzgagpgTgFzAYwIYBsQC4BmGIwC+QA#example5' queryParams={{search:'what'}}/>
 
 
 
-<div>
+<Tag size="lg" label={'hfashflshflhslfhslfhlshflhflshlf'}/>
 
-    <CalloutTag tagKey='Clicking me will' tagValue={['Create the components']}/>
-</div>

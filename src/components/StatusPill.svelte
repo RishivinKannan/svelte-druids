@@ -1,6 +1,6 @@
 <script>
     import "../css/global.css";
-    import Badge from "./Badge.svelte";
+    import Overflower from "./Overflower.svelte";
     export let label = null;
     /*
      * @type {number}
@@ -9,7 +9,7 @@
 
     export let icon = null;
     export let iconProps = {};
-    export let iconPosition = 'left';
+    export let iconPosition = "left";
 
     export let size = "xs";
     /*  It will infer the label or level.You can opt out of this by false
@@ -27,7 +27,8 @@
     export let hasAutoHeight = false;
     export let isSoft = false;
     export let isCircle = false;
-    export let isNaked =false;
+    export let isNaked = false;
+    export let customStyle = "";
 
     $: heightStyle = hasAutoHeight
         ? "height: 100%;"
@@ -44,9 +45,16 @@
 
     $: withoutLabelpadding = label ? "" : "padding-left:2px;padding-right:2px;";
 
-    $: titleValue = typeof title === 'string' ? title : typeof title === "boolean" ?'':label ? label : level;
+    $: titleValue =
+        typeof title === "string"
+            ? title
+            : typeof title === "boolean"
+              ? ""
+              : label
+                ? label
+                : level;
 
-    $: backgroundStyle = isNaked? 'background: transparent;':'';
+    $: backgroundStyle = isNaked ? "background: transparent;" : "";
 
     function handleClick() {
         if (typeof clickable === "function") {
@@ -59,13 +67,13 @@
 <span
     on:click={handleClick}
     title={titleValue}
-    style="{withoutLabelpadding}{heightStyle}{widthStyle}{backgroundStyle}"
-    class:druids-statuspill-Soft={isSoft||isNaked}
+    style="{withoutLabelpadding}{heightStyle}{widthStyle}{backgroundStyle}{customStyle}"
+    class:druids-statuspill-Soft={isSoft || isNaked}
     class:druids-statuspill-Clickable={clickable}
     class:druids-statuspill-Circle={isCircle}
     class=" {levelClass} {sizeClass} druids-statuspill"
 >
-    {#if icon && iconPosition == 'left'}
+    {#if icon && iconPosition == "left"}
         <svelte:component this={icon} {...iconProps} />
     {/if}
     {#if count}
@@ -73,12 +81,14 @@
             {count}
         </span>
     {/if}
-    <span>
+    <span style="max-width: 100%;">
         {#if label}
-            {@html label}
+            <Overflower>
+                {@html label}
+            </Overflower>
         {/if}
     </span>
-    {#if icon && iconPosition == 'right'}
+    {#if icon && iconPosition == "right"}
         <svelte:component this={icon} {...iconProps} />
     {/if}
 </span>
@@ -100,8 +110,9 @@
     .druids-statuspill {
         width: auto;
         height: auto;
+        max-width: 100%;
         box-sizing: border-box;
-        padding: 2px 4px;
+        padding: 4px 8px;
         border-radius: 4px;
         display: inline-flex;
         align-items: center;
