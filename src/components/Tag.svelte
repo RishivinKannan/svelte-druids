@@ -111,7 +111,7 @@
         gap: 4px;
         border-radius: 4px;
         background: var(--ui-tag-background);
-        color: var(--ui-text-tertiary);
+        color: var(--ui-tag-text-key);
         padding: 4px 8px;
         font-size: small;
     }
@@ -158,7 +158,7 @@
     }
 
     .druids-tag-word-1 {
-        color: var(--ui-text-tertiary);
+        color: var(--ui-tag-text-key);
     }
     .druids-tag-word-2 {
         color: var(--ui-tag-text-value);

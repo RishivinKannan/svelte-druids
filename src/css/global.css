@@ -20,6 +20,7 @@
     --ui-tag-background: #f4f4f5;
 
     --ui-tag-text-value: #0C3472;
+    --ui-tag-text-key: #57657E;
 
     --ui-text: #202f38;
     --ui-text-secondary: #656f75;
@@ -69,6 +70,8 @@ body.dark {
     --ui-tag-background: #2C2B2B;
 
     --ui-tag-text-value: #6881A2;
+    --ui-tag-text-key: #A19FA3;
+
 
 
 
