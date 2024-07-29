@@ -4,18 +4,24 @@
 
     export let label = null;
 
+    export let allowOverflow = false;
+
     export let maxWidth = null;
     let el;
 
     let overflowed = false;
 
-    $:Style = maxWidth ? typeof maxWidth === 'bigint'? `--overflower-max-width:${maxWidth};`: `--overflower-max-width:${maxWidth}px;` : "--overflower-max-width: none;";
+    $: Style = maxWidth
+        ? typeof maxWidth === "bigint"
+            ? `--overflower-max-width:${maxWidth};`
+            : `--overflower-max-width:${maxWidth}px;`
+        : "--overflower-max-width: 100%;";
 
     onMount(() => {
         var resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 if (entry.target === el) {
-                    console.log(true)
+                    console.log(true);
                     overflowed = isOverflowing(el);
                 }
             }
@@ -37,35 +43,53 @@
     }
 </script>
 
-<Popover isHoverable shouldVisible={overflowed} isPadded={false} maxWidth={500}>
-<div slot="trigger" class="druids-overflower" bind:this={el} style={Style}>
+{#if allowOverflow}
     {#if label}
         {@html label}
     {:else}
         <slot />
     {/if}
-</div>
+{:else}
+    <Popover
+        isHoverable
+        shouldVisible={overflowed}
+        isPadded={false}
+        maxWidth={500}
+    >
+        <div
+            slot="trigger"
+            class="druids-overflower"
+            bind:this={el}
+            style={Style}
+        >
+            {#if label}
+                {@html label}
+            {:else}
+                <slot />
+            {/if}
+        </div>
 
-
-    <div slot="popper" class='druids-overflower-popper'>
-        {#if label}
-            {label}
-        {:else}
-            <slot />
-        {/if}
-    </div>
-</Popover>
+        <div slot="popper" class="druids-overflower-popper">
+            {#if label}
+                {label}
+            {:else}
+                <slot />
+            {/if}
+        </div>
+    </Popover>
+{/if}
 
 <style>
     .druids-overflower {
         max-width: var(--overflower-max-width);
         min-width: 0;
         white-space: nowrap;
+        text-wrap: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }
 
-    .druids-overflower-popper{
+    .druids-overflower-popper {
         font-size: small;
         padding: 4px 8px;
         text-wrap: wrap;

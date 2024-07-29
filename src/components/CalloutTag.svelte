@@ -1,6 +1,7 @@
 <script>
     import "../css/global.css";
     import InfoIcon from "./icons/InfoIcon.svelte";
+    import Overflower from "./Overflower.svelte";
     import Popover from "./Popover.svelte";
     /*
      * @type {string}
@@ -45,9 +46,9 @@
 >
     <div>
         <div class="druids-calloutTag-head">
-            <span>
+            <Overflower>
                 {tagKey?.toUpperCase()}
-            </span>
+            </Overflower>
             {#if infoMessage}
                 <Popover
                     isHoverable
@@ -75,9 +76,9 @@
             {#if icon}
                 <svelte:component this={icon} {...iconProps} />
             {/if}
-            <span>
-                {renderTagValue}
-            </span>
+            <Overflower>
+                {@html renderTagValue}
+            </Overflower>
         </div>
     </div>
 
@@ -90,6 +91,7 @@
     .druids-calloutTag-button {
         all: unset;
         display: inline-flex;
+        max-width: 100%;
         align-items: center;
         justify-content: center;
         gap: 12px;
@@ -110,6 +112,7 @@
 
     .druids-calloutTag-button > div {
         display: inline-flex;
+        max-width: 100%;
         flex-direction: column;
         gap: 4px;
     }
@@ -120,8 +123,10 @@
         align-items: center;
         font-weight: bold;
         font-size: small;
+        overflow: hidden;
     }
     .druids-calloutTag-info {
+        float: right;
         color: var(--ui-interaction-primary);
     }
 

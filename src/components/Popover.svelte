@@ -137,7 +137,7 @@
   }
 </script>
 
-<span bind:this={triggerRef}>
+<span bind:this={triggerRef} style="max-width: 100%;">
   <slot name="trigger" />
 </span>
 

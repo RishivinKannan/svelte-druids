@@ -1,5 +1,6 @@
 <script>
     import "../css/global.css";
+    import Overflower from "./Overflower.svelte";
     export let label = "";
     /**
      * @type {icon}
@@ -16,6 +17,8 @@
     export let backgroundColor = "";
     export let textColor = "";
     export let shouldParseKey = true;
+
+    export let hasEllipsisWithToolTip = true;
     /**
      * @type {()=>void}
      */
@@ -43,20 +46,25 @@
                     <svelte:component this={icon} />
                 </span>
             {/if}
-            {#if shouldParseKey}
-                {#each labelSplit as labelWord, idx}
+            <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+                {#if shouldParseKey}
+                    {#each labelSplit as labelWord, idx}
+                        <span
+                            style={textColorStyle}
+                            class="druids-tag-word-{idx + 1} druids-tag-words"
+                        >
+                            {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
+                        </span>
+                    {/each}
+                {:else}
                     <span
                         style={textColorStyle}
-                        class="druids-tag-word-{idx + 1}"
+                        class="druids-tag-word-1 druids-tag-words"
                     >
-                        {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
-                    </span>
-                {/each}
-            {:else}
-                <span style={textColorStyle} class="druids-tag-word-1">
-                    {@html label}</span
-                >
-            {/if}
+                        {@html label}</span
+                    >
+                {/if}
+            </Overflower>
         </button>
     {:else if shouldParseKey}
         {#if icon}
@@ -64,20 +72,30 @@
                 <svelte:component this={icon} />
             </span>
         {/if}
-        {#each labelSplit as labelWord, idx}
-            <span style={textColorStyle} class="druids-tag-word-{idx + 1}">
-                {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
-            </span>
-        {/each}
+        <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+            {#each labelSplit as labelWord, idx}
+                <span
+                    style={textColorStyle}
+                    class="druids-tag-word-{idx + 1} druids-tag-words"
+                >
+                    {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
+                </span>
+            {/each}
+        </Overflower>
     {:else}
         {#if icon}
             <span style={iconColorStyle} class="druids-tag-icon">
                 <svelte:component this={icon} />
             </span>
         {/if}
-        <span style={textColorStyle} class="druids-tag-word-1">
-            {@html label}</span
-        >
+        <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+            <span
+                style={textColorStyle}
+                class="druids-tag-word-1 druids-tag-words"
+            >
+                {@html label}</span
+            >
+        </Overflower>
     {/if}
     {#if onDelete}
         <button on:click={onDelete} class="druids-tag-deletable">X</button>
@@ -88,6 +106,7 @@
     .druids-tag-span {
         all: unset;
         display: inline-flex;
+        max-width: 90%;
         align-items: center;
         gap: 4px;
         border-radius: 4px;
@@ -96,6 +115,11 @@
         padding: 4px 8px;
         font-size: small;
     }
+    /* .druids-tag-span[data-hasEllipsis] div {
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    } */
     .druids-tag-icon {
         display: inline-flex;
         justify-content: center;

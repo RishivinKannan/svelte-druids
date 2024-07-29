@@ -1,6 +1,7 @@
 <script>
     import formatCompactNumber from "../utils/formatCompactNumber";
     import "../css/global.css";
+    import Overflower from "./Overflower.svelte";
 
     export let className = "";
     export let as = "span";
@@ -31,6 +32,8 @@
      * @type {"default"|"danger"|"warning"}
      */
     export let level = "default";
+
+    export let hasEllipsisWithToolTip = true;
 
     $: titleAttr = hasTooltip & (count > 1000) ? JSON.stringify(count) : title;
 
@@ -75,9 +78,9 @@
                 </span>
             {/if}
         {:else}
-            <span>
+            <Overflower allowOverflow={!hasEllipsisWithToolTip}>
                 {@html label}
-            </span>
+            </Overflower>
         {/if}
 
         {#if iconPosition == "right"}
@@ -105,9 +108,9 @@
                     </span>
                 {/if}
             {:else}
-                <span>
+                <Overflower allowOverflow={!hasEllipsisWithToolTip}>
                     {@html label}
-                </span>
+                </Overflower>
             {/if}
 
             {#if iconPosition == "right"}
@@ -123,6 +126,7 @@
         padding: 0.25rem 0.75rem;
         width: auto;
         display: inline-flex;
+        max-width: 90%;
         gap: 4px;
         justify-content: center;
         align-items: center;
