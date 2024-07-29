@@ -9,6 +9,8 @@
 
     export let maxWidth = null;
 
+    export let hasTooltip = true;
+
     export let tolltipContent;
     let el;
 
@@ -21,21 +23,22 @@
         : "--overflower-max-width: 100%;";
 
     onMount(() => {
-        var resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
-                if (entry.target === el) {
-                    console.log(true);
-                    overflowed = isOverflowing(el);
+        if (hasTooltip) {
+            var resizeObserver = new ResizeObserver((entries) => {
+                for (let entry of entries) {
+                    if (entry.target === el) {
+                        overflowed = isOverflowing(el);
+                    }
                 }
-            }
-        });
+            });
 
-        resizeObserver.observe(el);
-        overflowed = isOverflowing(el);
+            resizeObserver.observe(el);
+            overflowed = isOverflowing(el);
 
-        return () => {
-            resizeObserver.disconnect();
-        };
+            return () => {
+                resizeObserver.disconnect();
+            };
+        }
     });
 
     function isOverflowing(el) {
@@ -53,7 +56,7 @@
         <slot />
     {/if}
 {:else}
-    <Tooltip content={label?label:tolltipContent} hasTooltip={overflowed}>
+    <Tooltip content={label ? label : tolltipContent} hasTooltip={overflowed}>
         <div class="druids-overflower" bind:this={el} style={Style}>
             {#if label}
                 {@html label}
@@ -73,5 +76,4 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
 </style>
