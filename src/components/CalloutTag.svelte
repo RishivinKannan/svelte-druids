@@ -46,7 +46,7 @@
 >
     <div>
         <div class="druids-calloutTag-head">
-            <Overflower>
+            <Overflower tolltipContent={tagKey?.toUpperCase()}>
                 {tagKey?.toUpperCase()}
             </Overflower>
             {#if infoMessage}
@@ -76,7 +76,7 @@
             {#if icon}
                 <svelte:component this={icon} {...iconProps} />
             {/if}
-            <Overflower>
+            <Overflower tolltipContent={renderTagValue}>
                 {@html renderTagValue}
             </Overflower>
         </div>

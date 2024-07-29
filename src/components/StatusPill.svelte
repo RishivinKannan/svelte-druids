@@ -83,7 +83,7 @@
     {/if}
     <span style="max-width: 100%;">
         {#if label}
-            <Overflower>
+            <Overflower tolltipContent={label}>
                 {@html label}
             </Overflower>
         {/if}

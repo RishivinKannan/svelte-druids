@@ -53,7 +53,8 @@
   $: roundedStyle = !isRounded ? `border-radius: 0px;` : "";
   $: paddingStyle = isPadded ? "padding: 12px;" : "";
 
-  $: popperStyles = maxWidthStyle + widthStyle + roundedStyle + paddingStyle + maxHeightStyle;
+  $: popperStyles =
+    maxWidthStyle + widthStyle + roundedStyle + paddingStyle + maxHeightStyle;
 
   let showEvents = [];
   let hideEvents = [];
@@ -66,7 +67,6 @@
   let triggerRef;
   let popperRef;
   let popperInstance;
-  // let outsideRef;
 
   onMount(() => {
     popperInstance = createPopper(triggerRef.children[0], popperRef, {
@@ -94,8 +94,6 @@
     if (open) {
       show();
     }
-
-    //outsideRef.addEventListener("click", hide);
 
     return () => {
       showEvents.forEach((event) => {
@@ -125,7 +123,6 @@
 
   function hide() {
     popperRef.style.display = "none";
-    //outsideRef.style.display = "none";
 
     popperInstance.setOptions((options) => ({
       ...options,
@@ -151,12 +148,6 @@
   <slot name="popper" {hide} />
 </div>
 
-<!-- <div
-    use:portal={"body"}
-    class="druids-popover-outside"
-    bind:this={outsideRef}
-></div>--->
-
 <style>
   #druids-popover-popper {
     display: none;
@@ -170,11 +161,4 @@
     overflow-x: hidden;
     text-wrap: wrap;
   }
-
-  /*.druids-popover-outside {*/
-  /*   display: none;*/
-  /*   position: absolute;*/
-  /*   inset: 0;*/
-  /*   z-index: 989;*/
-  /* }*/
 </style>

@@ -46,7 +46,7 @@
                     <svelte:component this={icon} />
                 </span>
             {/if}
-            <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+            <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
                 {#if shouldParseKey}
                     {#each labelSplit as labelWord, idx}
                         <span
@@ -72,7 +72,7 @@
                 <svelte:component this={icon} />
             </span>
         {/if}
-        <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+        <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
             {#each labelSplit as labelWord, idx}
                 <span
                     style={textColorStyle}
@@ -88,7 +88,7 @@
                 <svelte:component this={icon} />
             </span>
         {/if}
-        <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+        <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
             <span
                 style={textColorStyle}
                 class="druids-tag-word-1 druids-tag-words"

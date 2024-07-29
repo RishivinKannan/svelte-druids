@@ -629,6 +629,10 @@
         color: var(--ui-text-knockout);
     }
 
+    .druids-table th{
+        cursor: pointer;
+    }
+
     .druids-table-body tr:hover {
         background: var(--ui-interaction-secondary);
     }

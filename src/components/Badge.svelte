@@ -78,7 +78,7 @@
                 </span>
             {/if}
         {:else}
-            <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+            <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
                 {@html label}
             </Overflower>
         {/if}
@@ -108,7 +108,7 @@
                     </span>
                 {/if}
             {:else}
-                <Overflower allowOverflow={!hasEllipsisWithToolTip}>
+                <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
                     {@html label}
                 </Overflower>
             {/if}

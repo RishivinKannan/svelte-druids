@@ -1,12 +1,15 @@
 <script>
     import { onMount } from "svelte";
     import Popover from "./Popover.svelte";
+    import Tooltip from "./Tooltip.svelte";
 
     export let label = null;
 
     export let allowOverflow = false;
 
     export let maxWidth = null;
+
+    export let tolltipContent;
     let el;
 
     let overflowed = false;
@@ -50,33 +53,15 @@
         <slot />
     {/if}
 {:else}
-    <Popover
-        isHoverable
-        shouldVisible={overflowed}
-        isPadded={false}
-        maxWidth={500}
-    >
-        <div
-            slot="trigger"
-            class="druids-overflower"
-            bind:this={el}
-            style={Style}
-        >
+    <Tooltip content={label?label:tolltipContent} hasTooltip={overflowed}>
+        <div class="druids-overflower" bind:this={el} style={Style}>
             {#if label}
                 {@html label}
             {:else}
                 <slot />
             {/if}
         </div>
-
-        <div slot="popper" class="druids-overflower-popper">
-            {#if label}
-                {label}
-            {:else}
-                <slot />
-            {/if}
-        </div>
-    </Popover>
+    </Tooltip>
 {/if}
 
 <style>
@@ -89,10 +74,4 @@
         overflow: hidden;
     }
 
-    .druids-overflower-popper {
-        font-size: small;
-        padding: 4px 8px;
-        text-wrap: wrap;
-        font-weight: bold;
-    }
 </style>

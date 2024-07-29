@@ -39,11 +39,7 @@
         size="md"
         customStyle="border-top-right-radius: 0;border-bottom-right-radius:0;color:var(--ui-text)"
     />
-    <button
-        title="clickToCopy"
-        class="druids-httprequest-button"
-        on:click={copyFunction}
-    >
+    <button class="druids-httprequest-button" on:click={copyFunction}>
         <Overflower label={url} maxWidth={isFullWidth ? "none" : 400} />
     </button>
     {#if Object.keys(queryParams).length !== 0}
