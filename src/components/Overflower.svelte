@@ -69,5 +69,6 @@
         font-size: small;
         padding: 4px 8px;
         text-wrap: wrap;
+        font-weight: bold;
     }
 </style>
