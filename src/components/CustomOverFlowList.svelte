@@ -51,27 +51,28 @@
      */
     export let maxCount = null;
 
-
     $: gapStyle = `gap: ${gapY}px ${gapX}px;`;
 
     let allElementsRef;
     let containerRef;
     let overflowIndicatorRef;
 
-    let containerWidth=0;
-
+    let containerWidth = 0;
 
     let columns = [
         {
-            header:accessorKey,
+            header: accessorKey,
             accessorKey,
-            cell: ({row})=> {
-                return renderComponent(comp,row.original)}
-        }
-    ]
+            render: ({ value, props }) => {
+                return renderComponent(comp, {
+                    ...props.row.original,
+                    label: value,
+                });
+            },
+        },
+    ];
 
-
-    let renderElements = []
+    let renderElements = [];
 
     onMount(() => {
         var resizeObserver = new ResizeObserver((entries) => {
@@ -92,7 +93,6 @@
     function calculateRender() {
         let currentWidth = 0;
 
-
         currentWidth += beforeContent
             ? allElementsRef.children[0].offsetWidth
             : 0;
@@ -104,10 +104,10 @@
 
         for (let i = 0; i < (maxCount ? maxCount : props.length); i++) {
             let elementWidth = 0;
-            
+
             const alltagsDiv = allElementsRef.children;
             const tagDiv = alltagsDiv[beforeContent ? i + 1 : i];
-            
+
             elementWidth = tagDiv.offsetWidth + gapX;
 
             let indicatorWidthValue =
@@ -158,7 +158,11 @@
                     >+{props.length - renderElements.length}</button
                 >
                 <div slot="popper" style="width:100%">
-                    <Table data={props} {columns} searchPlaceholder="Search here..." />
+                    <Table
+                        data={props}
+                        {columns}
+                        searchPlaceholder="Search here..."
+                    />
                 </div>
             </Popover>
         {:else if afterContent}
@@ -189,7 +193,6 @@
     .druids-customOverflow-container {
         box-sizing: border-box;
         padding: 4px;
-        
     }
 
     .druids-customOverflow-list {
