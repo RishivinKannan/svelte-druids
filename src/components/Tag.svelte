@@ -39,81 +39,59 @@
 </script>
 
 <span class="druids-tag-span {sizeClass} " style=" {backgroundColorStyle}">
-    {#if onClick}
-        <button on:click={onClick} class="druids-tag-clickable">
-            {#if icon}
-                <span style={iconColorStyle} class="druids-tag-icon">
-                    <svelte:component this={icon} />
-                </span>
-            {/if}
-            <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
-                {#if shouldParseKey}
-                    {#each labelSplit as labelWord, idx}
-                        <span
-                            style={textColorStyle}
-                            class="druids-tag-word-{idx + 1} druids-tag-words"
-                        >
-                            {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
-                        </span>
-                    {/each}
-                {:else}
+    <button
+        on:click={onClick}
+        class:druids-tag-clickable={onClick ? true : false}
+        class="druids-tag-button"
+    >
+        {#if icon}
+            <span style={iconColorStyle} class="druids-tag-icon">
+                <svelte:component this={icon} />
+            </span>
+        {/if}
+        <Overflower
+            allowOverflow={!hasEllipsisWithToolTip}
+            tolltipContent={label}
+        >
+            {#if shouldParseKey}
+                {#each labelSplit as labelWord, idx}
                     <span
                         style={textColorStyle}
-                        class="druids-tag-word-1 druids-tag-words"
+                        class="druids-tag-word-{idx + 1} druids-tag-words"
                     >
-                        {@html label}</span
-                    >
-                {/if}
-            </Overflower>
-        </button>
-    {:else if shouldParseKey}
-        {#if icon}
-            <span style={iconColorStyle} class="druids-tag-icon">
-                <svelte:component this={icon} />
-            </span>
-        {/if}
-        <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
-            {#each labelSplit as labelWord, idx}
+                        {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
+                    </span>
+                {/each}
+            {:else}
                 <span
                     style={textColorStyle}
-                    class="druids-tag-word-{idx + 1} druids-tag-words"
+                    class="druids-tag-word-1 druids-tag-words"
                 >
-                    {@html labelWord}{#if idx < labelSplit.length - 1 && labelSplit.length >= 2}:{/if}
-                </span>
-            {/each}
+                    {@html label}</span
+                >
+            {/if}
         </Overflower>
-    {:else}
-        {#if icon}
-            <span style={iconColorStyle} class="druids-tag-icon">
-                <svelte:component this={icon} />
-            </span>
-        {/if}
-        <Overflower allowOverflow={!hasEllipsisWithToolTip} tolltipContent={label}>
-            <span
-                style={textColorStyle}
-                class="druids-tag-word-1 druids-tag-words"
-            >
-                {@html label}</span
-            >
-        </Overflower>
-    {/if}
+    </button>
     {#if onDelete}
-        <button on:click={onDelete} class="druids-tag-deletable">X</button>
+        <button on:click={onDelete} class="druids-tag-deletable">
+            ⤬
+        </button>
     {/if}
 </span>
 
 <style>
     .druids-tag-span {
         all: unset;
+        position: relative;
         display: inline-flex;
-        max-width: 90%;
+        max-width: 100%;
         align-items: center;
         gap: 4px;
         border-radius: 4px;
         background: var(--ui-tag-background);
         color: var(--ui-tag-text-key);
-        padding: 4px 8px;
         font-size: small;
+        overflow: hidden;
     }
     /* .druids-tag-span[data-hasEllipsis] div {
         text-wrap: nowrap;
@@ -125,17 +103,25 @@
         justify-content: center;
         align-items: center;
     }
-    .druids-tag-clickable {
+    .druids-tag-button {
+        all: unset;
+        padding: 4px 8px;
+        cursor: pointer;
         display: inline-flex;
+        max-width: 90%;
         align-items: center;
         gap: 4px;
+        border-radius: inherit;
     }
-
     .druids-tag-deletable {
-        float: right;
+        all: unset;
+        border-radius: 4px;
+        display: inline-block;
+        padding: 4px 8px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
+
     .druids-tag-span:has(.druids-tag-deletable) .druids-tag-clickable {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
@@ -148,13 +134,6 @@
     .druids-tag-span:has(.druids-tag-clickable) {
         padding: 0;
         gap: 0;
-    }
-
-    button {
-        all: unset;
-        border-radius: 4px;
-        display: inline-block;
-        padding: 4px 8px;
     }
 
     .druids-tag-word-1 {

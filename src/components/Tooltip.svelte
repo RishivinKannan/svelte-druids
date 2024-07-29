@@ -24,7 +24,11 @@
 </span>
 
 <style>
+    span{
+        cursor: inherit;
+    }
     span[data-tooltip-disabled="true"] {
+        cursor: inherit;
         pointer-events: none;
     }
     :global(.tippy-box[data-theme~="dark"]){
