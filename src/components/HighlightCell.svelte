@@ -20,14 +20,6 @@
     export let highlight;
     export let value;
 
-    // $:highlight = highlight.replace('/\s/g','').length?'':highlight
-
-    // $: pattern = new RegExp(highlight, "gi");
-
-    // $: render = value.replace(
-    //     pattern,
-    //     (match) => `<span style='background: #FFF5BA;'>${match}</span>`,
-    // );
 
     $: render = highlightWords(value,highlight)
 </script>
