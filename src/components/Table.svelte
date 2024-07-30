@@ -73,6 +73,7 @@
      * @type {string}
      */
     export let localStorageKey = null;
+    export let hasUnsort = true;
 
     let visibilityKey;
     let orderKey;
@@ -303,6 +304,7 @@
         filterFns: {
             fuzzy: fuzzyFilter,
         },
+        enableSortingRemoval:hasUnsort,
         enableResizing: resizeable,
         columnResizeMode: "onChange",
         onColumnSizingChange: setColumnSizing,

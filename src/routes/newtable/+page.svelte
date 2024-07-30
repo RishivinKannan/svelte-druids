@@ -32,5 +32,5 @@
 
 <input type="checkbox" bind:checked={toggle}>
 {#if toggle }
-<TableNew {...{ columns, data }} pagination menu dropdown selectableRows/>
+<TableNew {...{ columns, data }} pagination menu dropdown selectableRows localStorageKey='what'/>
 {/if}
