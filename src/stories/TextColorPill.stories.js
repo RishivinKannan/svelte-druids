@@ -1,7 +1,7 @@
 import TextColorPill from "../components/TextColorPill.svelte";
 
 export default {
-    title: "druids/TextColorPill",
+    title: "druids/Pills/TextColorPill",
     component:TextColorPill,
     tags: ["autodocs"],
     excludeStories: /.*Data$/,

@@ -2,7 +2,7 @@ import StatusPill from "../components/StatusPill.svelte";
 import icon from "../components/icon.svelte";
 
 export default {
-  title: "druids/StatusPill",
+  title: "druids/Pills/StatusPill",
   component: StatusPill,
   tags: ["autodocs"],
   excludeStories: /.*Data$/,

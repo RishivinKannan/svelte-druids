@@ -1,6 +1,6 @@
 import ChangePill from '../components/ChangePill.svelte'
 export default {
-  title: "druids/ChangePill",
+  title: "druids/Pills/ChangePill",
   component:ChangePill,
   tags: ["autodocs"],
   excludeStories: /.*Data$/,

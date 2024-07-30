@@ -4,7 +4,7 @@ import Icon from "../components/icon.svelte";
 
 
 export default {
-    title: "druids/TimePill",
+    title: "druids/Pills/TimePill",
     component: TimePill,
     tags: ["autodocs"],
     excludeStories: /.*Data$/,

@@ -2,7 +2,7 @@ import Tag from "../components/Tag.svelte";
 import icon from "../components/icon.svelte";
 
 export default {
-  title: "druids/Tag",
+  title: "druids/Pills/Tag",
   component: Tag,
   tags: ["autodocs"],
   args: {

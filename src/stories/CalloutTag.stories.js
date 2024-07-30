@@ -3,7 +3,7 @@ import Icon from '../components/icon.svelte';
 
 
 export default {
-    title: "druids/CalloutTag",
+    title: "druids/Pills/CalloutTag",
     component: CalloutTag,
     tags: ["autodocs"],
     args: {

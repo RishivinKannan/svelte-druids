@@ -2,7 +2,7 @@
 import PalettePill from "../components/PalettePill.svelte";
 
 export default {
-    title: "druids/PalettePill",
+    title: "druids/Pills/PalettePill",
     component: PalettePill,
     tags: ["autodocs"],
     excludeStories: /.*Data$/,

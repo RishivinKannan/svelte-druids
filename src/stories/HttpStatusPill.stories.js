@@ -2,7 +2,7 @@
 import HttpStatusPill from "../components/HttpStatusPill.svelte";
 
 export default {
-  title: "druids/HttpStatusPill",
+  title: "druids/Pills/HttpStatusPill",
   component: HttpStatusPill,
   tags: ["autodocs"],
   excludeStories: /.*Data$/,

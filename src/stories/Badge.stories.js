@@ -2,7 +2,7 @@ import Badge from "../components/Badge.svelte";
 import icon from "../components/icon.svelte";
 
 export default {
-  title: "druids/Badge",
+  title: "druids/Pills/Badge",
   component: Badge,
   tags: ["autodocs"],
   args: {
