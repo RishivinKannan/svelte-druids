@@ -1,16 +1,15 @@
 <script context="module">
+    import { createTippy } from "../utils/tippy.js";
     const tippy = createTippy({
         maxWidth: "none",
-        theme:'dark',
-        placement:'auto'
+        theme: "dark",
+        placement: "auto",
     });
 
-    export {tippy as tooltip}
-
+    export { tippy as tooltip };
 </script>
 
 <script>
-    import { createTippy } from "../utils/tippy.js";
     import "../css/global.css";
     import "tippy.js/dist/tippy.css";
 

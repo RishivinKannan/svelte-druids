@@ -1,6 +1,5 @@
 <script>
     import { onMount } from "svelte";
-    import Popover from "./Popover.svelte";
     import Tooltip from "./Tooltip.svelte";
 
     export let label = null;
