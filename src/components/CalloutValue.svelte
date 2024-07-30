@@ -82,6 +82,7 @@
     {href}
     class="druids-calloutValue-button {sizeClass} {hoverClass} {statusBorder} {disableClass}"
     style="{customColors} {colorVars} {borderStyle} {customTextColor} "
+    target={isExternal?"_blank":'_self'}
     {...$$restProps}
 >
     <div>
