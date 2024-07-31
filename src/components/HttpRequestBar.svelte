@@ -1,6 +1,6 @@
 <script>
-    import StatusPill from "./StatusPill.svelte";
-    import HttpStatusPill from "./HttpStatusPill.svelte";
+    import StatusPill from "./pills/StatusPill.svelte";
+    import HttpStatusPill from "./pills/HttpStatusPill.svelte";
     import Popover from "./Popover.svelte";
     import Overflower from "./Overflower.svelte";
 
