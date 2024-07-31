@@ -1,4 +1,4 @@
-import TagList from "../components/TagList.svelte";
+import TagList from "../components/pills/TagList.svelte";
 import icon from "../components/icon.svelte";
 
 let array = ["how:how", "wow:wow", "what:what", "why:why", "sooooo:soooooo"];
@@ -9,7 +9,7 @@ for (let i = 0; i < 12; i++) {
 }
 
 export default {
-  title: "druids/TagList",
+  title: "druids/Pills/TagList",
   component: TagList,
   tags: ["autodocs"],
   excludeStories: /.*Data$/,
