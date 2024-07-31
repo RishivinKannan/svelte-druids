@@ -1,9 +1,9 @@
-import CalloutValue from '../components/CalloutValue.svelte'
+import CalloutValue from '../components/measures/CalloutValue.svelte'
 
 
 
 export default {
-    title: "druids/CalloutValue",
+    title: "druids/Measures/CalloutValue",
     component: CalloutValue,
     tags: ["autodocs"],
     args: {
