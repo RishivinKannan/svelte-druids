@@ -1,7 +1,7 @@
 <script>
     import "../../css/global.css";
     export let percentage = 0;
-    export let width = "100%";
+    export let width = 60;
     export let height = 12;
     export let barColor = null;
     export let backgroundColor = null;

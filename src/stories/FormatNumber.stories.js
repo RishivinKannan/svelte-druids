@@ -1,5 +1,4 @@
 
-import { ArgTypes } from '@storybook/blocks';
 import FormatNumber from '../components/measures/FormatNumber.svelte'
 
 export default {
@@ -9,10 +8,10 @@ export default {
     args: {
         value: 100000,
     },
-    argTypes:{
-        maxDecimal:{
-            control:'radio',
-            options:['undefined',0,1,2]
+    argTypes: {
+        maxDecimal: {
+            control: 'radio',
+            options: ['undefined', 0, 1, 2]
         }
     },
     excludeStories: /.*Data$/,
