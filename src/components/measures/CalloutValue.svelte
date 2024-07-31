@@ -1,10 +1,10 @@
 <script>
-    import "../css/global.css";
-    import ExternalLinkIcon from "./icons/ExternalLinkIcon.svelte";
-    import RightDownIcon from "./icons/RightDownIcon.svelte";
-    import RightUpIcon from "./icons/RightUpIcon.svelte";
+    import "../../css/global.css";
+    import ExternalLinkIcon from "../icons/ExternalLinkIcon.svelte";
+    import RightDownIcon from "../icons/RightDownIcon.svelte";
+    import RightUpIcon from "../icons/RightUpIcon.svelte";
 
-    import Overflower from "./Overflower.svelte";
+    import Overflower from "../Overflower.svelte";
 
     /*
      * @type {string}
