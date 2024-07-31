@@ -1,6 +1,6 @@
 <script>
     import prettyMilliseconds from "pretty-ms";
-    import "../css/global.css";
+    import "../../css/global.css";
     /*
      * @type  {string}
      */

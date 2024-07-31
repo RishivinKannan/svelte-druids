@@ -1,4 +1,4 @@
-import Tag from "../components/Tag.svelte";
+import Tag from "../components/pills/Tag.svelte";
 import icon from "../components/icon.svelte";
 
 export default {

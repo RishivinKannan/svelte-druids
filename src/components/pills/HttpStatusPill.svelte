@@ -1,5 +1,5 @@
 <script>
-    import httpStatusCode from "../utils/httpStatusCodes";
+    import httpStatusCode from "../../utils/httpStatusCodes";
     import StatusPill from "./StatusPill.svelte";
 
     /*

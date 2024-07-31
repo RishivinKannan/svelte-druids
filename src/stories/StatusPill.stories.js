@@ -1,4 +1,4 @@
-import StatusPill from "../components/StatusPill.svelte";
+import StatusPill from "../components/pills/StatusPill.svelte";
 import icon from "../components/icon.svelte";
 
 export default {

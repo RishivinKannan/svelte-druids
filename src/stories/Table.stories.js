@@ -1,7 +1,7 @@
 
 import TableNew, { renderComponent } from "../components/Table.svelte"
-import Tag from "../components/Tag.svelte";
-import StatusPill from "../components/StatusPill.svelte"
+import Tag from "../components/pills/Tag.svelte";
+import StatusPill from "../components/pills/StatusPill.svelte"
 
 const data = [
   { foo: "Winter", bar: 30, baz: true },

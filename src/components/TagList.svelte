@@ -3,7 +3,7 @@
 
     import Popover from "./Popover.svelte";
     import Table, { renderComponent } from "./Table.svelte";
-    import Tag from "./Tag.svelte";
+    import Tag from "./pills/Tag.svelte";
 
     /**
      *   Array of string | Array of objects which is props of each tag exclude size prop

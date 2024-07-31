@@ -1,4 +1,4 @@
-import TextColorPill from "../components/TextColorPill.svelte";
+import TextColorPill from "../components/pills/TextColorPill.svelte";
 
 export default {
     title: "druids/Pills/TextColorPill",

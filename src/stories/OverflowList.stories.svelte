@@ -12,7 +12,7 @@
 
 <script>
     import { Template, Story } from "@storybook/addon-svelte-csf";
-    import Badge from "../components/Badge.svelte";
+    import Badge from "../components/pills/Badge.svelte";
 </script>
 
 <Template let:args>

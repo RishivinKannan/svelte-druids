@@ -1,5 +1,5 @@
 
-import PalettePill from "../components/PalettePill.svelte";
+import PalettePill from "../components/pills/PalettePill.svelte";
 
 export default {
     title: "druids/Pills/PalettePill",

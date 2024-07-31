@@ -1,4 +1,4 @@
-import ChangePill from '../components/ChangePill.svelte'
+import ChangePill from '../components/pills/ChangePill.svelte'
 export default {
   title: "druids/Pills/ChangePill",
   component:ChangePill,

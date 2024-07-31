@@ -1,4 +1,4 @@
-import Badge from "../components/Badge.svelte";
+import Badge from "../components/pills/Badge.svelte";
 import icon from "../components/icon.svelte";
 
 export default {

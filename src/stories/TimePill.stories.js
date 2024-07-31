@@ -1,4 +1,4 @@
-import TimePill from '../components/TimePill.svelte'
+import TimePill from '../components/pills/TimePill.svelte'
 import Icon from "../components/icon.svelte";
 
 

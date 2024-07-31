@@ -1,7 +1,7 @@
 <script>
-    import formatCompactNumber from "../utils/formatCompactNumber";
-    import "../css/global.css";
-    import Overflower from "./Overflower.svelte";
+    import formatCompactNumber from "../../utils/formatCompactNumber";
+    import "../../css/global.css";
+    import Overflower from "../Overflower.svelte";
 
     export let className = "";
     export let as = "span";

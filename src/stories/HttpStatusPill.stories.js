@@ -1,5 +1,5 @@
 
-import HttpStatusPill from "../components/HttpStatusPill.svelte";
+import HttpStatusPill from "../components/pills/HttpStatusPill.svelte";
 
 export default {
   title: "druids/Pills/HttpStatusPill",

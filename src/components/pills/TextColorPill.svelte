@@ -1,5 +1,5 @@
 <script>
-    import TextIcon from "./icons/TextIcon.svelte";
+    import TextIcon from "../icons/TextIcon.svelte";
     /*
      * @type {string}
      */

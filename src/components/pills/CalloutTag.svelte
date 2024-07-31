@@ -1,8 +1,8 @@
 <script>
-    import "../css/global.css";
-    import InfoIcon from "./icons/InfoIcon.svelte";
-    import Overflower from "./Overflower.svelte";
-    import Popover from "./Popover.svelte";
+    import "../../css/global.css";
+    import InfoIcon from "../icons/InfoIcon.svelte";
+    import Overflower from "../Overflower.svelte";
+    import Popover from "../Popover.svelte";
     /*
      * @type {string}
      */

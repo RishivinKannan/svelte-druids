@@ -1,7 +1,7 @@
 <script>
-    import FlatIcon from "./icons/FlatIcon.svelte";
-    import RightDownIcon from "./icons/RightDownIcon.svelte";
-    import RightUpIcon from "./icons/RightUpIcon.svelte";
+    import FlatIcon from "../icons/FlatIcon.svelte";
+    import RightDownIcon from "../icons/RightDownIcon.svelte";
+    import RightUpIcon from "../icons/RightUpIcon.svelte";
     import StatusPill from "./StatusPill.svelte";
 
     /*

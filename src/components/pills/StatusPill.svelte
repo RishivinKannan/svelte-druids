@@ -1,6 +1,6 @@
 <script>
-    import "../css/global.css";
-    import Overflower from "./Overflower.svelte";
+    import "../../css/global.css";
+    import Overflower from "../Overflower.svelte";
     export let label = null;
     /*
      * @type {number}

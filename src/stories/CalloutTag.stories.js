@@ -1,4 +1,4 @@
-import CalloutTag from '../components/CalloutTag.svelte'
+import CalloutTag from '../components/pills/CalloutTag.svelte'
 import Icon from '../components/icon.svelte';
 
 
