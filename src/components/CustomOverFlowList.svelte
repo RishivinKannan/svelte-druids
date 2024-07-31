@@ -223,5 +223,6 @@
         border: solid 2px var(--ui-border);
         border-radius: 4px;
         padding: 2px 6px;
+        cursor: pointer;
     }
 </style>
