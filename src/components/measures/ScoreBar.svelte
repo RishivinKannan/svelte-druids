@@ -1,10 +1,11 @@
 <script>
+    import '../../css/global.css'
     export let total = 5;
     export let value = 0;
     export let style = "";
     export let level = "default";
 
-    $: levelVar = `--druids-scorebar-level: var(--ui-status-${level},var(--ui-interaction-primary));`;
+    $: levelVar = `--druids-scorebar-level: var(--ui-status-${level},var(--ui-dataviz-blue));`;
 </script>
 
 <div style="{style} {levelVar}">

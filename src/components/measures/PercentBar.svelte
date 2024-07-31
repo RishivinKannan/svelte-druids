@@ -55,7 +55,7 @@
     .druids-percentbar-bar {
         width: var(--druids-percentbar-percentage,0%);
         height: 100%;
-        background: var(--druids-percentbar-bar, var(--ui-interaction-primary));
+        background: var(--druids-percentbar-bar, var(--ui-dataviz-blue));
         transition-property: width;
         transition-duration: 1s;
         transition-timing-function: ease-in-out;

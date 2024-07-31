@@ -50,6 +50,9 @@
     --ui-status-other: #828ba4;
     --ui-status-other-contrast: #585f70;
     --ui-status-other-soft: #eff1f5;
+
+    --ui-dataviz-blue: #3598EC;
+
 }
 
 
@@ -103,6 +106,8 @@ body.dark {
     --ui-status-other: #65626A;
     --ui-status-other-contrast: #858387;
     --ui-status-other-soft: #2C2B2B;
+
+    --ui-dataviz-blue: #6B9CC8;
 
 }
 
