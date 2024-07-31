@@ -1,4 +1,4 @@
-import Badge from '../components/Badge.svelte';
+import Badge from '../components/pills/Badge.svelte';
 import CustomOverflowList from '../components/CustomOverFlowList.svelte'
 
 let array = [
