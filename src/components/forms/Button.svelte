@@ -191,7 +191,7 @@
     /*Disabled State*/
 
     .druids-button:disabled {
-        background: var(--ui-border) !important;
+        background: var(--ui-background-secondary) !important;
         color: var(--ui-text-disabled) !important;
         cursor: not-allowed;
     }
@@ -199,8 +199,11 @@
     /* Active state */
 
     .druids-button:active {
-        outline: 3px solid rgba(0, 0, 0, 0.02);
+        outline: 3px solid rgba(0, 0, 0, 0.03);
         outline-offset: -4px;
+    }
+    .druids-button:active:disabled{
+        outline: none;
     }
     .druids-button.druids-button-naked:active {
         outline: none;
@@ -231,6 +234,9 @@
 
     .druids-button:hover {
         border-color: var(--ui-background-shade);
+    }
+    .druids-button:disabled:hover{
+        border-color: var(--ui-border);
     }
 
     .druids-button.druids-button-shade:hover {
@@ -288,6 +294,9 @@
 
     .druids-button.druids-button-hovered {
         border-color: var(--ui-background-shade);
+    }
+    .druids-button:disabled.druids-button-hovered{
+        border-color: var(--ui-border);
     }
     .druids-button.druids-button-shade.druids-button-hovered {
         background: var(--druids-button-color, var(--ui-interaction-primary));
