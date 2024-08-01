@@ -1,5 +1,6 @@
 <script>
     import "../css/global.css";
+    import Loading from "./icons/Loading.svelte";
     export let icon = null;
     export let iconProps = {};
     export let label = "";
@@ -26,7 +27,9 @@
 >
     <div class="druids-popovermenuitem-details">
         {#if isLoading}
-            <span></span>
+            <span class='druids-loading-indicator'>
+                <Loading/>
+            </span>
         {:else if icon}
             <span class="druids-popovermenuitem-icon">
                 <svelte:component this={icon} {...iconProps} />
@@ -63,6 +66,16 @@
         color: var(--ui-text);
         font-weight: normal;
     }
+
+    .druids-loading-indicator{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ui-text-disabled);
+        animation: spin 1s linear infinite;
+    }
+
+
     .druids-popovermenuitem-button:disabled:hover{
         background: var(--ui-background-secondary);
         cursor: not-allowed;

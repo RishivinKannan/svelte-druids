@@ -114,3 +114,13 @@ body.dark {
 .druids-highlight-match {
     background: #FFF5BA;
 }
+
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}

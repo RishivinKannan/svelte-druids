@@ -53,7 +53,7 @@
             <PopoverMenuSection header="TOP" separator="below">
                 <PopoverMenuItem label="Action" />
                 <PopoverMenuItem label="Action with Icon" icon={SearchIcon} />
-                <PopoverMenuItem label="Action" />
+                <PopoverMenuItem label="Action" isLoading />
             </PopoverMenuSection>
         </div>
     </Popover>
