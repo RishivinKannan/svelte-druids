@@ -1,4 +1,5 @@
 <script>
+    import "../../css/global.css";
     import Overflower from "../Overflower.svelte";
     export let isChecked = false;
     export let isDisabled = false;
@@ -12,7 +13,7 @@
     export let inputClassName = "";
     export let labelClassName = "";
 
-    $: sizeClass = `druids-checkbox-${size}`
+    $: sizeClass = `druids-checkbox-${size}`;
 </script>
 
 <label class="druids-checkbox-label {sizeClass} {labelClassName}">
@@ -35,7 +36,7 @@
         on:mouseover
         {...$$restProps}
     />
-    <Overflower allowOverflow={!hasOverflower} {label}/>
+    <Overflower allowOverflow={!hasOverflower} {label} />
 </label>
 
 <style>
@@ -44,28 +45,29 @@
         max-width: 100%;
         align-items: center;
         gap: 4px;
+        color: var(--ui-text);
     }
 
-    .druids-checkbox-label.druids-checkbox-xs{
+    .druids-checkbox-label.druids-checkbox-xs {
         font-size: smaller;
     }
-    .druids-checkbox-label.druids-checkbox-sm{
+    .druids-checkbox-label.druids-checkbox-sm {
         font-size: small;
     }
-    .druids-checkbox-label.druids-checkbox-xs .druids-checkbox,.druids-checkbox-label.druids-checkbox-sm .druids-checkbox{
-       transform: scale(.9);
+    .druids-checkbox-label.druids-checkbox-xs .druids-checkbox,
+    .druids-checkbox-label.druids-checkbox-sm .druids-checkbox {
+        transform: scale(0.9);
     }
-    .druids-checkbox-label.druids-checkbox-md{
+    .druids-checkbox-label.druids-checkbox-md {
         font-size: medium;
     }
-    .druids-checkbox-label.druids-checkbox-md .druids-checkbox{
+    .druids-checkbox-label.druids-checkbox-md .druids-checkbox {
         transform: scale(1);
     }
-    .druids-checkbox-label.druids-checkbox-lg{
+    .druids-checkbox-label.druids-checkbox-lg {
         font-size: large;
     }
-    .druids-checkbox-label.druids-checkbox-lg .druids-checkbox{
+    .druids-checkbox-label.druids-checkbox-lg .druids-checkbox {
         transform: scale(1.2);
     }
-
 </style>

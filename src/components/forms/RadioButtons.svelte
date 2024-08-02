@@ -1,4 +1,5 @@
 <script>
+    import '../../css/global.css'
     export let options = [];
     export let name;
     export let value;
@@ -28,6 +29,7 @@
         display: flex;
         font-size: large;
         flex-direction: var(--druids-flex-direction);
+        color: var(--ui-text);
     }
     .druids-radio-label{
         display: inline-flex;
