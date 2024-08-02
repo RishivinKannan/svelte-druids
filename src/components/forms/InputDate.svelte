@@ -139,6 +139,7 @@
         position: relative;
         display: inline-flex;
         gap: 4px;
+        box-sizing: border-box;
         flex-wrap: nowrap;
         align-items: center;
         outline: 1px solid var(--druids-input-color, var(--ui-border));

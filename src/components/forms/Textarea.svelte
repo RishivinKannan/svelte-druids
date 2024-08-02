@@ -2,11 +2,8 @@
     import { onMount } from "svelte";
     import { tooltip } from "../Tooltip.svelte";
     import "../../css/global.css";
-    import Loading from "../icons/Loading.svelte";
     import { lockupStyle } from "../../utils/component-helper";
 
-    export let icon = null;
-    export let iconProps = {};
     export let value = "";
     export let width = 240;
     export let size = "md";
@@ -18,7 +15,8 @@
     export let isLoading = false;
     export let isReadOnly = false;
     export let isFullWidth = false;
-    export let isClearable = false;
+    export let defaultRows = 2;
+    export let maxRows = null;
 
     export let validationLevel = null;
     export let validationMessage = null;
@@ -47,10 +45,11 @@
         ? `--druids-input-color:var(--ui-status-${levelName});--druids-input-color-soft:var(--ui-status-${levelName}-soft);`
         : "";
 
-    $: widthVar =
-        typeof width === "string"
-            ? `--druids-input-width: ${width};`
-            : `--druids-input-width: ${width}px;`;
+    $: widthVar = isFullWidth
+        ? `--druids-input-width:100%;`
+        : typeof width === "string"
+          ? `--druids-input-width: ${width};`
+          : `--druids-input-width: ${width}px;`;
 
     function keyUpHandler(e) {
         if (e.key === "Escape") {
@@ -64,29 +63,50 @@
     onMount(() => {
         if (focusOnMount) ref.focus();
         if (selectOnMount) ref.select();
+
+        if (maxRows) {
+            function getLineHeight(element) {
+                const style = window.getComputedStyle(element);
+                const lineHeight = parseInt(style.lineHeight);
+
+                if (isNaN(lineHeight)) {
+                    const fontSize = parseInt(style.fontSize);
+                    return fontSize * 1.4;
+                }
+
+                return lineHeight;
+            }
+
+            ref.addEventListener("input", function () {
+                const lineHeight = getLineHeight(ref);
+                const maxHeight = lineHeight * maxRows;
+
+                ref.style.height = "auto"; // Reset the height
+                if (ref.scrollHeight > maxHeight) {
+                    ref.style.height = `${maxHeight}px`;
+                    ref.style.overflowY = "auto";
+                } else {
+                    ref.style.height = `${ref.scrollHeight}px`;
+                    ref.style.overflowY = "hidden";
+                }
+            });
+        }
     });
 </script>
 
 <div
-    class="druids-input-container {sizeClass}"
+    class="druids-input-container"
     class:druids-input-fullwidth={isFullWidth}
-    class:druids-input-soft={isSoft}
     style="{widthVar}{levelVar}{style}{lockup}"
 >
-    {#if isLoading}
-        <span class="druids-input-loading"><Loading /> </span>
-    {:else if icon}
-        <svelte:component this={icon} {...iconProps} />
-    {/if}
-    <input
+    <textarea
+        class="druids-input {sizeClass}"
+        class:druids-input-soft={isSoft}
         bind:this={ref}
-        type="text"
         {placeholder}
         bind:value
         readonly={isReadOnly}
         disabled={isDisabled | isLoading}
-        class="druids-input"
-        class:druids-input-fullwidth={isFullWidth}
         on:change
         on:click
         on:blur
@@ -96,13 +116,9 @@
         on:mouseover
         on:mousedown
         on:keypress={keyUpHandler}
+        rows={defaultRows}
         {...$$restProps}
     />
-    {#if isClearable & (value.length > 0)}
-        <button class="druids-input-clear" on:click={() => (value = "")}
-            >⤬</button
-        >
-    {/if}
     {#if validationMessage}
         {#if hasValidationIcon}
             <div class="druids-input-message"></div>
@@ -130,72 +146,34 @@
         background: var(--druids-input-color);
         border-radius: 100%;
     }
-    .druids-input-clear {
-        all: unset;
-        box-sizing: border-box;
-        position: absolute;
-        right: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: x-large;
-        width: 10%;
-        padding-right: 2px;
-        padding-bottom: 4px;
-        height: 100%;
-        color: var(--ui-interaction-primary);
-        cursor: pointer;
-    }
-    .druids-input-clear:hover {
-        color: var(--ui-interaction-primary-contrast);
-    }
 
-    .druids-input-loading {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--ui-text);
-        animation: spin 1s linear infinite;
-    }
     .druids-input-container {
         position: relative;
-        display: inline-flex;
-        max-width: 100%;
         box-sizing: border-box;
-        gap: 4px;
-        flex-wrap: nowrap;
-        align-items: center;
+        display: inline-block;
+        max-width: 100%;
         outline: 1px solid var(--druids-input-color, var(--ui-border));
-        padding: 4px 8px;
         border-radius: 4px;
-        color: var(--ui-icon);
-        margin: 2px;
+        padding: 8px 12px;
     }
     .druids-input-container.druids-input-fullwidth {
         width: 100%;
     }
-    .druids-input.druids-input-fullwidth {
-        flex-grow: 1;
-    }
-    .druids-input-xs {
-        font-size: smaller;
-    }
-    .druids-input-sm {
-        font-size: small;
-    }
-    .druids-input-md {
+
+    .druids-input.druids-input-md {
         font-size: medium;
     }
-    .druids-input-lg {
+    .druids-input.druids-input-lg {
         font-size: larger;
-        padding: 6px 12px;
     }
 
     .druids-input {
         all: unset;
         width: var(--druids-input-width, 240px);
+        max-width: var(--druids-input-width, 240px);
         color: var(--ui-text);
         z-index: 1;
+        word-wrap: break-word;
     }
     .druids-input-container:has(.druids-input:disabled) {
         background: var(--ui-background-secondary);

@@ -135,6 +135,7 @@
     .druids-input-container {
         position: relative;
         z-index: 0;
+        box-sizing: border-box;
         display: inline-flex;
         max-width: 100%;
         gap: 4px;
