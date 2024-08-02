@@ -100,14 +100,14 @@
             >⤬</button
         >
     {/if}
-    {#if hasValidationIcon}
-        {#if validationMessage}
+    {#if validationMessage}
+        {#if hasValidationIcon}
             <div class="druids-input-message"></div>
-            <div
-                class="druids-input-tooltip"
-                use:tooltip={{ content: validationMessage }}
-            ></div>
         {/if}
+        <div
+            class="druids-input-tooltip"
+            use:tooltip={{ content: validationMessage }}
+        ></div>
     {/if}
 </div>
 
@@ -166,7 +166,7 @@
         color: var(--ui-icon);
     }
     .druids-input-container.druids-input-fullwidth {
-        width: 98%;
+        width: 100%;
     }
     .druids-input.druids-input-fullwidth {
         flex-grow: 1;
@@ -189,6 +189,7 @@
         all: unset;
         width: var(--druids-input-width, 240px);
         color: var(--ui-text);
+        z-index: 1;
     }
     .druids-input-container:has(.druids-input:disabled) {
         background: var(--ui-background-secondary);

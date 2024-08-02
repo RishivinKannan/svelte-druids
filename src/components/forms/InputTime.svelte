@@ -4,7 +4,6 @@
     import "../../css/global.css";
     import Loading from "../icons/Loading.svelte";
 
-
     export let icon = null;
     export let iconProps = {};
     export let value = "";
@@ -23,13 +22,12 @@
     export let validationMessage = null;
     export let hasValidationIcon = true;
     export let focusOnMount = false;
-    export let selectOnMount =false;
+    export let selectOnMount = false;
 
-    export let onEscacpe =()=>{}
-    export let onReturn =()=>{}
+    export let onEscacpe = () => {};
+    export let onReturn = () => {};
 
     let ref;
-
     $: sizeClass = `druids-input-${size}`;
 
     $: levelName = validationMessage
@@ -47,19 +45,19 @@
             ? `--druids-input-width: ${width};`
             : `--druids-input-width: ${width}px;`;
 
-
-    function keyUpHandler(e){
-        if(e.key==='Escape'){
-            onEscacpe()
+    function keyUpHandler(e) {
+        if (e.key === "Escape") {
+            onEscacpe();
         }
-        if(e.key === 'Enter'){
-            onReturn()
+        if (e.key === "Enter") {
+            onReturn();
         }
     }
 
     onMount(() => {
         if (focusOnMount) ref.focus();
-        if(selectOnMount) ref.select();
+        if (selectOnMount) ref.select();
+
     });
 </script>
 
@@ -94,14 +92,14 @@
         on:mousedown
         {...$$restProps}
     />
-    {#if hasValidationIcon}
-        {#if validationMessage}
+    {#if validationMessage}
+        {#if hasValidationIcon}
             <div class="druids-input-message"></div>
-            <div
-                class="druids-input-tooltip"
-                use:tooltip={{ content: validationMessage }}
-            ></div>
         {/if}
+        <div
+            class="druids-input-tooltip"
+            use:tooltip={{ content: validationMessage }}
+        ></div>
     {/if}
 </div>
 
@@ -131,6 +129,7 @@
     }
     .druids-input-container {
         position: relative;
+        z-index: 0;
         display: inline-flex;
         gap: 4px;
         flex-wrap: nowrap;
@@ -141,7 +140,7 @@
         color: var(--ui-icon);
     }
     .druids-input-container.druids-input-fullwidth {
-        width: 98%;
+        width: 100%;
     }
     .druids-input.druids-input-fullwidth {
         flex-grow: 1;
@@ -164,6 +163,7 @@
         all: unset;
         width: var(--druids-input-width, 240px);
         color: var(--ui-text);
+        z-index: 1;
     }
     .druids-input-container:has(.druids-input:disabled) {
         background: var(--ui-background-secondary);
