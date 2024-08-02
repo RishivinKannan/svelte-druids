@@ -1,5 +1,6 @@
 <script>
     import "../../css/global.css";
+    import { lockupStyle } from "../../utils/component-helper";
     import Loading from "../icons/Loading.svelte";
     export let label;
     /**
@@ -33,6 +34,10 @@
     export let iconRight = null;
     export let iconRightProps = {};
 
+    export let lockupSide = "FULL";
+
+    $: lockup = lockupStyle(lockupSide);
+
     $: ariaLabelValue = ariaLabel ? ariaLabel : label;
     $: sizeClass = `druids-button-${size}`;
 
@@ -56,7 +61,7 @@
         class:druids-button-active={isActive}
         class:druids-button-fullwidth={isFullWidth}
         class:druids-button-borderless={isBorderless}
-        style="{style}{levelVar}"
+        style="{style}{levelVar}{lockup}"
         on:click
         on:blur
         on:focus
@@ -97,7 +102,7 @@
         class:druids-button-active={isActive}
         class:druids-button-fullwidth={isFullWidth}
         class:druids-button-borderless={isBorderless}
-        style="{style}{levelVar}"
+        style="{style}{levelVar}{lockup}"
         on:click
         on:blur
         on:focus
@@ -157,7 +162,6 @@
         padding: 6px 12px;
     }
 
-
     .druids-loading-indicator {
         display: inline-flex;
         align-items: center;
@@ -203,7 +207,7 @@
         outline: 3px solid rgba(0, 0, 0, 0.03);
         outline-offset: -4px;
     }
-    .druids-button:active:disabled{
+    .druids-button:active:disabled {
         outline: none;
     }
     .druids-button.druids-button-naked:active {
@@ -234,9 +238,12 @@
     /* Hovered State */
 
     .druids-button:hover {
-        border-color: var(--druids-button-color-contrast,var(--ui-background-shade));
+        border-color: var(
+            --druids-button-color-contrast,
+            var(--ui-background-shade)
+        );
     }
-    .druids-button:disabled:hover{
+    .druids-button:disabled:hover {
         border-color: var(--ui-border);
     }
 
@@ -294,9 +301,12 @@
     /* Forced Hover state */
 
     .druids-button.druids-button-hovered {
-        border-color: var(--druids-button-color-contrast,var(--ui-background-shade));
+        border-color: var(
+            --druids-button-color-contrast,
+            var(--ui-background-shade)
+        );
     }
-    .druids-button:disabled.druids-button-hovered{
+    .druids-button:disabled.druids-button-hovered {
         border-color: var(--ui-border);
     }
     .druids-button.druids-button-shade.druids-button-hovered {

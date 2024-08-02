@@ -3,6 +3,7 @@
     import { tooltip } from "../Tooltip.svelte";
     import "../../css/global.css";
     import Loading from "../icons/Loading.svelte";
+    import { lockupStyle } from "../../utils/component-helper";
 
 
     export let icon = null;
@@ -25,11 +26,15 @@
     export let focusOnMount = false;
     export let selectOnMount =false;
 
+    export let lockupSide ='FULL'
+
+
     export let onEscacpe =()=>{}
     export let onReturn =()=>{}
 
     let ref;
 
+    $: lockup = lockupStyle(lockupSide)
     $: sizeClass = `druids-input-${size}`;
 
     $: levelName = validationMessage
@@ -67,7 +72,7 @@
     class="druids-input-container {sizeClass}"
     class:druids-input-fullwidth={isFullWidth}
     class:druids-input-soft={isSoft}
-    style="{widthVar}{levelVar}{style}"
+    style="{widthVar}{levelVar}{style}{lockup}"
 >
     {#if isLoading}
         <span class="druids-input-loading"><Loading /> </span>
@@ -139,6 +144,8 @@
         padding: 4px 8px;
         border-radius: 4px;
         color: var(--ui-icon);
+        max-width: 100%;
+        margin: 2px;
     }
     .druids-input-container.druids-input-fullwidth {
         width: 100%;

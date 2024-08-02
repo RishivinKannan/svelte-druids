@@ -3,7 +3,7 @@
     import { tooltip } from "../Tooltip.svelte";
     import "../../css/global.css";
     import Loading from "../icons/Loading.svelte";
-
+    import { lockupStyle } from "../../utils/component-helper";
 
     export let icon = null;
     export let iconProps = {};
@@ -24,12 +24,16 @@
     export let validationMessage = null;
     export let hasValidationIcon = true;
     export let focusOnMount = false;
-    export let selectOnMount =false;
+    export let selectOnMount = false;
 
-    export let onEscacpe =()=>{}
-    export let onReturn =()=>{}
+    export let lockupSide = "FULL";
+
+    export let onEscacpe = () => {};
+    export let onReturn = () => {};
 
     let ref;
+
+    $: lockup = lockupStyle(lockupSide);
 
     $: sizeClass = `druids-input-${size}`;
 
@@ -48,19 +52,18 @@
             ? `--druids-input-width: ${width};`
             : `--druids-input-width: ${width}px;`;
 
-
-    function keyUpHandler(e){
-        if(e.key==='Escape'){
-            onEscacpe()
+    function keyUpHandler(e) {
+        if (e.key === "Escape") {
+            onEscacpe();
         }
-        if(e.key === 'Enter'){
-            onReturn()
+        if (e.key === "Enter") {
+            onReturn();
         }
     }
 
     onMount(() => {
         if (focusOnMount) ref.focus();
-        if(selectOnMount) ref.select();
+        if (selectOnMount) ref.select();
     });
 </script>
 
@@ -68,7 +71,7 @@
     class="druids-input-container {sizeClass}"
     class:druids-input-fullwidth={isFullWidth}
     class:druids-input-soft={isSoft}
-    style="{widthVar}{levelVar}{style}"
+    style="{widthVar}{levelVar}{style}{lockup}"
 >
     {#if isLoading}
         <span class="druids-input-loading"><Loading /> </span>
@@ -157,6 +160,7 @@
     .druids-input-container {
         position: relative;
         display: inline-flex;
+        max-width: 100%;
         gap: 4px;
         flex-wrap: nowrap;
         align-items: center;
@@ -164,6 +168,7 @@
         padding: 4px 8px;
         border-radius: 4px;
         color: var(--ui-icon);
+        margin: 2px;
     }
     .druids-input-container.druids-input-fullwidth {
         width: 100%;
