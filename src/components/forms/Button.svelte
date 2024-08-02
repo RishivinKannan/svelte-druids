@@ -193,6 +193,7 @@
     .druids-button:disabled {
         background: var(--ui-background-secondary) !important;
         color: var(--ui-text-disabled) !important;
+        border: none;
         cursor: not-allowed;
     }
 
@@ -293,7 +294,7 @@
     /* Forced Hover state */
 
     .druids-button.druids-button-hovered {
-        border-color: var(--ui-background-shade);
+        border-color: var(--druids-button-color-contrast,var(--ui-background-shade));
     }
     .druids-button:disabled.druids-button-hovered{
         border-color: var(--ui-border);
