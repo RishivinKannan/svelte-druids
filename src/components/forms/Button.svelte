@@ -233,7 +233,7 @@
     /* Hovered State */
 
     .druids-button:hover {
-        border-color: var(--ui-background-shade);
+        border-color: var(--druids-button-color-contrast,var(--ui-background-shade));
     }
     .druids-button:disabled:hover{
         border-color: var(--ui-border);
