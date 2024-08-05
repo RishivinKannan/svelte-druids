@@ -32,27 +32,28 @@
     import Popover from "./Popover.svelte";
     import PopoverMenuItem from "./PopoverMenuItem.svelte";
     import PopoverMenuSection from "./PopoverMenuSection.svelte";
+    import Toggle from "./forms/Toggle.svelte";
 
     export let data;
     /*
      * refer: https://tanstack.com/table/latest/docs/api/core/column-def
      * Additionally, You can specify render function in ColumnDef which will help with highlight letter when global search.
-     * 
+     *
      * eg. [{
      *  ...default,
-     * 
+     *
      *  // Don't specify cell when you use render because cell has high priority.//
-     * 
+     *
      *  render:({value,props})=>renderComponent(Component,CompProps),
-     * 
+     *
      * }]
-     * 
+     *
      * //typeof props is {table: Table<TData>,row: Row<TData>,column: Column<TData>,cell: Cell<TData>,getValue: () => any,renderValue: () => any}
-     * 
+     *
      * // refer above.
-     * 
-     * // Value will be html dom elements. 
-     * so, The best would be to use Badge,Tag,StatusPill etc.., 
+     *
+     * // Value will be html dom elements.
+     * so, The best would be to use Badge,Tag,StatusPill etc..,
      * or else  render the Component that will render {@html value} //
      */
     export let columns = [];
@@ -304,7 +305,7 @@
         filterFns: {
             fuzzy: fuzzyFilter,
         },
-        enableSortingRemoval:hasUnsort,
+        enableSortingRemoval: hasUnsort,
         enableResizing: resizeable,
         columnResizeMode: "onChange",
         onColumnSizingChange: setColumnSizing,
@@ -376,23 +377,21 @@
                     <SettingsIcon />
                 </button>
                 <div slot="popper" class="druids-table-settings">
-                    <label>
-                        All
-                        <input
-                            checked={$table.getIsAllColumnsVisible()}
-                            on:change={$table.getToggleAllColumnsVisibilityHandler()}
-                            type="checkbox"
-                        />
-                    </label>
+                    <Toggle
+                        style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
+                        size="xs"
+                        label="All"
+                        isChecked={$table.getIsAllColumnsVisible()}
+                        on:change={$table.getToggleAllColumnsVisibilityHandler()}
+                    />
                     {#each $table.getAllLeafColumns() as column}
-                        <label>
-                            {column.id}
-                            <input
-                                checked={column.getIsVisible()}
-                                on:change={column.getToggleVisibilityHandler()}
-                                type="checkbox"
-                            />
-                        </label>
+                    <Toggle
+                        style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
+                        size="xs"
+                        label={column.id}
+                        isChecked={column.getIsVisible()}
+                        on:change={column.getToggleVisibilityHandler()}
+                    />
                     {/each}
                 </div>
             </Popover>
@@ -581,16 +580,20 @@
         color: var(--ui-text);
     }
 
-    .druids-table-header input::placeholder{
-        color:var(--ui-icon)
+    .druids-table-header input::placeholder {
+        color: var(--ui-icon);
     }
-    .druids-table-settings label {
+    /* .druids-table-settings label {
         display: flex;
         justify-content: space-between;
         min-width: 100px;
         gap: 4px;
-    }
-    
+    } */
+     .druids-table-settings{
+        width: 100px;
+        max-width: 100%;
+     }
+
     .druids-table-settings-trigger {
         all: unset;
         padding: 4px;
@@ -616,7 +619,7 @@
         gap: 4px;
         border: solid 1px var(--ui-border);
         border-radius: 4px;
-        color: var(--ui-icon)
+        color: var(--ui-icon);
     }
 
     .druids-table {
@@ -631,7 +634,7 @@
         color: var(--ui-text-knockout);
     }
 
-    .druids-table th{
+    .druids-table th {
         cursor: pointer;
     }
 
