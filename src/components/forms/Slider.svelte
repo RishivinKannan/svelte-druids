@@ -16,6 +16,10 @@
     $: sizeClass = `druids-slider-${size}`;
     $: levelVar = `--druids-slider-track:var(--ui-status-${level});`;
 
+    $: customColorStyle = customColor
+        ? `--druids-custom-color:${customColor};`
+        : "";
+
     let range = Array.isArray(value) ? [...value] : [0, Number(value)];
 
     $: customSteps = marks
@@ -55,7 +59,10 @@
     }
 </script>
 
-<div class="druids-slider-container {sizeClass}" style="{levelVar} {style}">
+<div
+    class="druids-slider-container {sizeClass}"
+    style="{levelVar}{customColorStyle} {style}"
+>
     {#if (typeof value === "number") | (typeof value === "string")}
         <input
             type="range"
@@ -97,7 +104,8 @@
     {/if}
     <div
         class="druids-slider-track"
-        style="left:{minRange}%;width:{((maxRange - minRange) / max) * 100}%;"
+        style="left:{minRange}%;width:{((maxRange - minRange) / max) *
+            100}%;background: var(--druids-custom-color,var(--druids-slider-track, var(--ui-interaction-primary)));"
     ></div>
 </div>
 
@@ -166,7 +174,7 @@
         width: 15px;
         height: 15px;
         border-radius: 50%;
-        background: var(--druids-slider-track, var(--ui-interaction-primary));
+        background: var(--druids-custom-color,var(--druids-slider-track, var(--ui-interaction-primary)));
         cursor: grab;
         pointer-events: auto;
     }
@@ -190,6 +198,6 @@
         position: absolute;
         font-size: small;
         transform: translateX(-50%);
-        margin-top: 5px;
+        margin-top: 15px;
     }
 </style>
