@@ -115,8 +115,9 @@
             if (e.key === "Enter") {
                 handleSelect(filterFn(options, inputVal)[focusIdx]);
             }
-            if (e.key === "Esc") {
+            if (e.key === "Escape") {
                 handleClose();
+                selectRef.focus()
             }
         }
     }
@@ -325,7 +326,7 @@
     }
     .druids-select:hover,
     .druids-select:focus {
-        outline: 1.5px solid var(--ui-background-shade);
+        outline: 2px solid var(--ui-background-shade);
     }
     .druids-select:has(.druids-select-option):hover {
         outline-color: var(--ui-border);
