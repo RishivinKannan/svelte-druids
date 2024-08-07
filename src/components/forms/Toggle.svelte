@@ -1,4 +1,5 @@
 <script>
+    import '../../css/global.css'
     export let label=null;
     export let isChecked = false;
     export let id = null;
@@ -29,19 +30,19 @@
 
 <style>
     .root-style {
-        --druids-toggle-width-xs: 30px;
+        --druids-toggle-width-xs: 34px;
         --druids-toggle-width-sm: 38px;
-        --druids-toggle-width-md: 42px;
-        --druids-toggle-width-lg: 52px;
+        --druids-toggle-width-md: 44px;
+        --druids-toggle-width-lg: 56px;
 
-        --druids-toggle-height-xs: 18px;
-        --druids-toggle-height-sm: 22px;
-        --druids-toggle-height-md: 24px;
-        --druids-toggle-height-lg: 30px;
+        --druids-toggle-height-xs: 19px;
+        --druids-toggle-height-sm: 24px;
+        --druids-toggle-height-md: 25px;
+        --druids-toggle-height-lg: 31px;
 
-        --druids-toggle-slider-xs: 14px;
-        --druids-toggle-slider-sm: 18px;
-        --druids-toggle-slider-md: 20px;
+        --druids-toggle-slider-xs: 13px;
+        --druids-toggle-slider-sm: 15px;
+        --druids-toggle-slider-md: 18px;
         --druids-toggle-slider-lg: 24px;
 
         display: inline-flex;
@@ -126,7 +127,7 @@
         height: var(--druids-toggle-slider-md);
         width: var(--druids-toggle-slider-md);
         border-radius: 16px;
-        left: 1.2px;
+        left: 3px;
         top: 50%;
         transform: translateY(-50%);
         background-color: var(--ui-background);
@@ -140,6 +141,6 @@
     }
 
     input:checked + .slider:before {
-        transform: translateX(90%) translateY(-50%);
+        transform: translateX(100%) translateY(-50%);
     }
 </style>
