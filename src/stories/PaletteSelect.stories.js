@@ -29,7 +29,7 @@ export default {
     tags: ["autodocs"],
     excludeStories: /.*Data$/,
     args: {
-        paletteColors: options,
+        paletteOptions: options,
         selectedPalette: options[2]
     }
 };
