@@ -117,7 +117,7 @@
             }
             if (e.key === "Escape") {
                 handleClose();
-                selectRef.focus()
+                selectRef.focus();
             }
         }
     }
@@ -148,9 +148,10 @@
                 this={valueRender}
                 {...value}
                 on:click={handleOpen}
+                class="option"
             />
         {:else}
-            <option {...value} on:click={handleOpen} />
+            <option {...value} on:click={handleOpen} class="option"/>
         {/if}
         {#if clearable}
             <button class="druids-select-clear" on:click={() => (value = "")}
@@ -295,9 +296,6 @@
     .druids-select.druids-select-fullwidth {
         width: 100%;
     }
-    .druids-select.druids-select-fullwidth > option {
-        flex-grow: 1;
-    }
 
     .druids-select.druids-select-fullwidth .druids-select-option {
         width: 100%;
@@ -305,10 +303,6 @@
 
     .druids-select:disabled:hover {
         outline: 1.5px solid var(--ui-border);
-    }
-
-    .druids-select:disabled > option {
-        color: var(--ui-text-tertiary);
     }
 
     .druids-select-nosearch {
@@ -320,9 +314,6 @@
     .druids-placeholder,
     .druids-select-option input::placeholder {
         color: var(--ui-text-tertiary);
-    }
-    .druids-select > option {
-        padding: 4px 8px;
     }
     .druids-select:hover,
     .druids-select:focus {
@@ -355,6 +346,46 @@
         padding: 4px 8px;
         background: var(--ui-interaction-secondary);
         border-bottom: 1px solid var(--ui-border);
+    }
+
+ /* Not global    */
+
+    .druids-select.druids-select-fullwidth > .option {
+        flex-grow: 1;
+    }
+    .druids-select > .option {
+        padding: 4px 8px;
+    }
+    .druids-select:disabled > .option {
+        color: var(--ui-text-tertiary);
+    }
+    .druids-select-option div .option {
+        padding: 8px;
+    }
+
+    .druids-select-option div:not(:hover) .option.focus {
+        background: var(--ui-interaction-primary);
+        color: var(--ui-text-knockout);
+        outline: none;
+    }
+
+    .druids-select-option div .option:hover,
+    .druids-select-option div .option:focus {
+        background: var(--ui-interaction-primary);
+        color: var(--ui-text-knockout);
+        outline: none;
+    }
+
+
+
+    :global(.druids-select.druids-select-fullwidth > .option) {
+        flex-grow: 1;
+    }
+    :global(.druids-select > .option) {
+        padding: 4px 8px;
+    }
+    :global(.druids-select:disabled > .option) {
+        color: var(--ui-text-tertiary);
     }
     :global(.druids-select-option div .option) {
         padding: 8px;
