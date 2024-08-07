@@ -4,7 +4,7 @@
     export let max = 100;
     export let step = null;
     export let isDisabled = false;
-    export let value = [20, 50];
+    export let value = 0;
     export let marks = null;
 
     export let size = "md";
@@ -20,7 +20,7 @@
         ? `--druids-custom-color:${customColor};`
         : "";
 
-    let range = Array.isArray(value) ? [...value] : [0, Number(value)];
+    $: range = Array.isArray(value) ? [...value] : [0, Number(value)];
 
     $: customSteps = marks
         ? Object.keys(marks).map((val) => Number(val))
