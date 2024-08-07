@@ -8,7 +8,7 @@
 
 <!-- svelte-ignore a11y-interactive-supports-focus -->
 <div {value} role="button" on:click class="{$$restProps.class} druids-paletteoption" {...$$restProps}>
-    <PalettePill {...palette} hasBorder={true} />
+    <PalettePill {...palette} />
     <Label style='color:inherit;'>
         {label}
     </Label>
