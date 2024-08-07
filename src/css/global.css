@@ -22,6 +22,8 @@
     --ui-tag-text-value: #0C3472;
     --ui-tag-text-key: #57657E;
 
+    --ui-link-hover:#0d0f8b;
+
     --ui-text: #202f38;
     --ui-text-secondary: #656f75;
     --ui-text-tertiary: #8d9599;
@@ -75,7 +77,7 @@ body.dark {
     --ui-tag-text-value: #6881A2;
     --ui-tag-text-key: #A19FA3;
 
-
+    --ui-link-hover:#7AB5EA;
 
 
     --ui-text: #C9C9C9;
