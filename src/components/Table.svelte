@@ -28,7 +28,8 @@
     import SearchIcon from "./icons/SearchIcon.svelte";
     import SettingsIcon from "./icons/SettingsIcon.svelte";
     import UpIcon from "./icons/UpIcon.svelte";
-    import PaginationNew from "./PaginationNew.svelte";
+    import Pagination from "./nav/Pagination.svelte";
+    import Select from "./forms/Select.svelte";
     import Popover from "./Popover.svelte";
     import PopoverMenuItem from "./PopoverMenuItem.svelte";
     import PopoverMenuSection from "./PopoverMenuSection.svelte";
@@ -325,6 +326,30 @@
     const handleKeyUp = (e) => {
         $table.setGlobalFilter(String(e?.target?.value));
     };
+
+    const PageSizeOptions = [
+        {
+            label: "Show 2 rows",
+            value: 2,
+        },
+        {
+            value: 5,
+            label: "Show 5 rows",
+        },
+        {
+            value: 10,
+            label: "Show 10 rows",
+        },
+        {
+            label: "Show 20 rows",
+            value: 20,
+        },
+        {
+            label: "Show All",
+            value: data.length,
+        },
+    ];
+
     onMount(() => {
         let state = {};
         if (localStorageKey) {
@@ -357,193 +382,196 @@
     });
 </script>
 
-<div class="druids-table-header">
-    {#if globalSearch}
-        <div class="druids-table-header-input">
-            <SearchIcon />
-            <input
-                type="text"
-                bind:value={gobalFilterValue}
-                on:keyup={handleKeyUp}
-                placeholder={searchPlaceholder}
-            />
-        </div>
-    {/if}
+<div class="druids-table-container">
+    <div class="druids-table-header">
+        {#if globalSearch}
+            <div class="druids-table-header-input">
+                <SearchIcon />
+                <input
+                    type="text"
+                    bind:value={gobalFilterValue}
+                    on:keyup={handleKeyUp}
+                    placeholder={searchPlaceholder}
+                />
+            </div>
+        {/if}
 
-    {#if menu}
-        <div class="druids-table-menu">
-            <Popover isRounded>
-                <button slot="trigger" class="druids-table-settings-trigger">
-                    <SettingsIcon />
-                </button>
-                <div slot="popper" class="druids-table-settings">
-                    <Toggle
-                        style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
-                        size="xs"
-                        label="All"
-                        isChecked={$table.getIsAllColumnsVisible()}
-                        on:change={$table.getToggleAllColumnsVisibilityHandler()}
-                    />
-                    {#each $table.getAllLeafColumns() as column}
-                    <Toggle
-                        style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
-                        size="xs"
-                        label={column.id}
-                        isChecked={column.getIsVisible()}
-                        on:change={column.getToggleVisibilityHandler()}
-                    />
-                    {/each}
-                </div>
-            </Popover>
-        </div>
-    {/if}
-</div>
-<table class="druids-table" cellspacing="0" cellpadding="0">
-    <thead class="druids-table-head">
-        {#each $table.getHeaderGroups() as headerGroup}
-            <tr class="druids-table-head-row">
-                {#each headerGroup.headers as header}
-                    <th style="width: {header.getSize()}px">
-                        <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                        <div on:click={header.column.getToggleSortingHandler()}>
-                            {#if !header.isPlaceholder}
-                                <svelte:component
-                                    this={flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext(),
-                                    )}
+        {#if menu}
+            <div class="druids-table-menu">
+                <Popover isRounded>
+                    <button
+                        slot="trigger"
+                        class="druids-table-settings-trigger"
+                    >
+                        <SettingsIcon />
+                    </button>
+                    <div slot="popper" class="druids-table-settings">
+                        <Toggle
+                            style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
+                            size="xs"
+                            label="All"
+                            isChecked={$table.getIsAllColumnsVisible()}
+                            on:change={$table.getToggleAllColumnsVisibilityHandler()}
+                        />
+                        {#each $table.getAllLeafColumns() as column}
+                            <Toggle
+                                style="justify-content:space-between;font-weight:bold;width:100%;flex-direction:row-reverse;"
+                                size="xs"
+                                label={column.id}
+                                isChecked={column.getIsVisible()}
+                                on:change={column.getToggleVisibilityHandler()}
+                            />
+                        {/each}
+                    </div>
+                </Popover>
+            </div>
+        {/if}
+    </div>
+    <table class="druids-table" cellspacing="0" cellpadding="0">
+        <thead class="druids-table-head">
+            {#each $table.getHeaderGroups() as headerGroup}
+                <tr class="druids-table-head-row">
+                    {#each headerGroup.headers as header}
+                        <th style="width: {header.getSize()}px">
+                            <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                            <div
+                                on:click={header.column.getToggleSortingHandler()}
+                            >
+                                {#if !header.isPlaceholder}
+                                    <svelte:component
+                                        this={flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext(),
+                                        )}
+                                    />
+                                {/if}
+                                {#if header.column
+                                    .getIsSorted()
+                                    .toString() === "asc"}
+                                    <UpIcon />
+                                {:else if header.column
+                                    .getIsSorted()
+                                    .toString() === "desc"}
+                                    <DownIcon />
+                                {/if}
+                            </div>
+                            {#if header.column.id !== "select-col" && dropdown}
+                                <div class="druids-table-dropdown">
+                                    <Popover isPadded={false}>
+                                        <button
+                                            slot="trigger"
+                                            class="druids-table-dropdown-trigger"
+                                        >
+                                            <SettingsIcon />
+                                        </button>
+                                        <svelte:fragment slot="popper" let:hide>
+                                            <PopoverMenuSection
+                                                separator="bottom"
+                                            >
+                                                <PopoverMenuItem
+                                                    isDisabled={header.column.getIsFirstColumn()}
+                                                    label="Move to Left"
+                                                    icon={MoveLeft}
+                                                    width={"200px"}
+                                                    onClick={() => {
+                                                        moveColumnToLeft(
+                                                            header.column.getIndex(),
+                                                        );
+                                                        hide();
+                                                    }}
+                                                />
+                                                <PopoverMenuItem
+                                                    isDisabled={header.column.getIsLastColumn()}
+                                                    label="Move to Right"
+                                                    icon={MoveRight}
+                                                    width={"200px"}
+                                                    onClick={() => {
+                                                        moveColumnToRight(
+                                                            header.column.getIndex(),
+                                                        );
+                                                        hide();
+                                                    }}
+                                                />
+                                            </PopoverMenuSection>
+                                            <PopoverMenuItem
+                                                label="Hide"
+                                                isDisabled={!header.column.getCanHide()}
+                                                icon={HideIcon}
+                                                danger
+                                                width={"200px"}
+                                                onClick={(e) => {
+                                                    header.column.getToggleVisibilityHandler()(
+                                                        e,
+                                                    );
+                                                    hide();
+                                                }}
+                                            />
+                                        </svelte:fragment>
+                                    </Popover>
+                                </div>
+                            {/if}
+                            {#if header.column.getCanResize() && resizeable}
+                                <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+                                <span
+                                    class="druids-table-resizer resizer"
+                                    on:dblclick={() =>
+                                        header.column.resetSize()}
+                                    on:mousedown={header.getResizeHandler()}
+                                    on:touchstart={header.getResizeHandler()}
                                 />
                             {/if}
-                            {#if header.column
-                                .getIsSorted()
-                                .toString() === "asc"}
-                                <UpIcon />
-                            {:else if header.column
-                                .getIsSorted()
-                                .toString() === "desc"}
-                                <DownIcon />
-                            {/if}
-                        </div>
-                        {#if header.column.id !== "select-col" && dropdown}
-                            <div class="druids-table-dropdown">
-                                <Popover isPadded={false}>
-                                    <button
-                                        slot="trigger"
-                                        class="druids-table-dropdown-trigger"
-                                    >
-                                        <SettingsIcon />
-                                    </button>
-                                    <svelte:fragment slot="popper" let:hide>
-                                        <PopoverMenuSection separator="bottom">
-                                            <PopoverMenuItem
-                                                isDisabled={header.column.getIsFirstColumn()}
-                                                label="Move to Left"
-                                                icon={MoveLeft}
-                                                width={"200px"}
-                                                onClick={() => {
-                                                    moveColumnToLeft(
-                                                        header.column.getIndex(),
-                                                    );
-                                                    hide();
-                                                }}
-                                            />
-                                            <PopoverMenuItem
-                                                isDisabled={header.column.getIsLastColumn()}
-                                                label="Move to Right"
-                                                icon={MoveRight}
-                                                width={"200px"}
-                                                onClick={() => {
-                                                    moveColumnToRight(
-                                                        header.column.getIndex(),
-                                                    );
-                                                    hide();
-                                                }}
-                                            />
-                                        </PopoverMenuSection>
-                                        <PopoverMenuItem
-                                            label="Hide"
-                                            isDisabled={!header.column.getCanHide()}
-                                            icon={HideIcon}
-                                            danger
-                                            width={"200px"}
-                                            onClick={(e) => {
-                                                header.column.getToggleVisibilityHandler()(
-                                                    e,
-                                                );
-                                                hide();
-                                            }}
-                                        />
-                                    </svelte:fragment>
-                                </Popover>
-                            </div>
-                        {/if}
-                        {#if header.column.getCanResize() && resizeable}
-                            <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                            <span
-                                class="druids-table-resizer resizer"
-                                on:dblclick={() => header.column.resetSize()}
-                                on:mousedown={header.getResizeHandler()}
-                                on:touchstart={header.getResizeHandler()}
+                        </th>
+                    {/each}
+                </tr>
+            {/each}
+        </thead>
+        <tbody class="druids-table-body">
+            {#each $table.getRowModel().rows as row}
+                <tr>
+                    {#each row.getVisibleCells() as cell}
+                        <td style="width: {cell.column.getSize()}px">
+                            <svelte:component
+                                this={flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext(),
+                                )}
                             />
-                        {/if}
-                    </th>
-                {/each}
-            </tr>
-        {/each}
-    </thead>
-    <tbody class="druids-table-body">
-        {#each $table.getRowModel().rows as row}
-            <tr>
-                {#each row.getVisibleCells() as cell}
-                    <td style="width: {cell.column.getSize()}px">
-                        <svelte:component
-                            this={flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                            )}
-                        />
-                    </td>
-                {/each}
-            </tr>
-        {/each}
-    </tbody>
-</table>
-<div class="druids-table-footer">
-    {#if pagination}
-        <div>
-            <label for="pageSize" class="druids-tabel-select-label"
-                >Rows per Page:</label
-            >
-            <select
-                id="pageSize"
-                value={$table.getState().pagination.pageSize}
-                on:change={(e) => {
-                    $table.setPageSize(Number(e.target.value));
-                }}
-            >
-                {#each [2, 5, 10, 20, 30] as val}
-                    <option value={val}>Show {val}</option>
-                {/each}
-                <option value={data.length}>All</option>
-            </select>
-        </div>
-        <div>
-            <PaginationNew
-                hasPreviousPage={$table.getCanPreviousPage()}
-                hasNextPage={$table.getCanNextPage()}
-                handleNext={$table.nextPage}
-                handlePrev={$table.previousPage}
-                pageIndex={$table.getState().pagination.pageIndex}
-                setPage={$table.setPageIndex}
-                totalPages={$table.getPageCount()}
-            />
-        </div>
-    {/if}
+                        </td>
+                    {/each}
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+    <div class="druids-table-footer">
+        {#if pagination}
+            <div>
+                <label for="pageSize" class="druids-tabel-select-label"
+                    >Rows per Page:</label
+                >
+                <Select
+                    options={PageSizeOptions}
+                    value={PageSizeOptions[1]}
+                    onChange={(val) => $table.setPageSize(val.value)}
+                />
+            </div>
+            {#if $table.getState().pagination.pageSize < data.length}
+                <div>
+                    <Pagination
+                        currentPage={$table.getState().pagination.pageIndex + 1}
+                        onChange={(idx) => $table.setPageIndex(idx - 1)}
+                        totalPages={$table.getPageCount()}
+                    />
+                </div>
+            {/if}
+        {/if}
+    </div>
 </div>
 
 <style>
-    .druids-table-header,
-    .druids-table-footer {
+    .druids-table-container {
+        padding: 4px;
+    }
+    .druids-table-header {
         display: flex;
         padding: 4px 0px;
         justify-content: space-between;
@@ -551,7 +579,10 @@
     }
 
     .druids-table-footer {
-        justify-content: flex-end;
+        display: flex;
+        padding: 8px 0px;
+        gap: 8px;
+        justify-content: end;
         align-items: center;
     }
     .druids-tabel-select-label {
@@ -560,7 +591,7 @@
         color: var(--ui-text-tertiary);
     }
 
-    .druids-table-footer select {
+    /* .druids-table-footer select {
         background-color: white;
         border-radius: 4px;
         display: inline-block;
@@ -573,7 +604,7 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
-    }
+    } */
 
     .druids-table-header input[type="text"] {
         all: unset;
@@ -589,10 +620,10 @@
         min-width: 100px;
         gap: 4px;
     } */
-     .druids-table-settings{
+    .druids-table-settings {
         width: 100px;
         max-width: 100%;
-     }
+    }
 
     .druids-table-settings-trigger {
         all: unset;
@@ -688,6 +719,10 @@
         color: transparent;
         border: none;
         cursor: pointer;
+    }
+
+    .druids-table-dropdown-trigger:not(:hover):focus{
+        outline: none;
     }
 
     .druids-table-resizer {

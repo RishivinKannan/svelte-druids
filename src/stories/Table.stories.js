@@ -16,7 +16,6 @@ const columns = [
     accessorKey: "baz",
     cell: (info) => renderComponent(StatusPill, {
       level: info.getValue() !== undefined ? info.getValue() ? 'success' : 'danger' : 'warning',
-      hasAutoheight: true
     }),
     maxSize:5,
   },
