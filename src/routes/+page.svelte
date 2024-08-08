@@ -1,131 +1,17 @@
 <script>
-    import Badge from "../components/Badge.svelte";
-    import ChangePill from "../components/ChangePill.svelte";
-    import HttpStatusPill from "../components/HttpStatusPill.svelte";
-    import Icon from "../components/icon.svelte";
-    import DownIcon from "../components/icons/DownIcon.svelte";
-    import StatusPill from "../components/StatusPill.svelte";
-
-    import TagList from "../components/TagList.svelte";
-    import TimePill from "../components/TimePill.svelte";
-
-    let array = ["agdagag", "agdagag", "agdagag", "agdaga", "adhlla"];
-    let items = [];
-
-    for (let i = 0; i < 4; i++) {
-        items = [...items, ...array];
-    }
-
-    const data = [
-        { name: "Ada Lovelace", age: 21 },
-        { name: "Barbara Liskov", age: 52 },
-        { name: "Richard Hamming", age: 38 },
-    ];
-
-    const columns = [
-        {
-            header: "Name",
-            accessorKey: "name",
-        },
-        {
-            header: "Age",
-            accessorKey: "age",
-        },
-    ];
-
-    let statusCode=200;
+    import Badge from '../components/pills/Badge.svelte'
+    import Table from '../components/Table.svelte';
 </script>
 
-<div class="container">
-    <Badge label="watchdog" icon={Icon} iconPosition="right" />
-
-    <Badge label="watchdog" icon={Icon} iconPosition="left" />
-
-    <Badge label="watchdog" icon={Icon} iconPosition="right" isBorderless />
-
-    <Badge label="watchdog" icon={Icon} iconPosition="right" isInteractive />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        isInteractive
-        count={20}
-    />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        count={1234}
-        maxCount={2000}
-    />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        count={1234}
-        maxCount={2000}
-        level="warning"
-    />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        count={1234}
-        maxCount={2000}
-        level="danger"
-        hasTooltip
-    />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        size="xs"
-        level="warning"
-    />
-    <Badge
-        label="watchdog"
-        compProps={{ href: "/yeah!", onClick: (e) => console.log(e) }}
-        icon={Icon}
-        iconPosition="right"
-        size="sm"
-        level="danger"
-    />
-
-    <Badge
-        label="watchdog"
-        icon={Icon}
-        iconPosition="right"
-        size="lg"
-        title="Badge"
-        as="button"
-        name="button"
-    />
-</div>
-<TagList tags={items} lines={2} gapY={10} />
-
-
-<input type="number" bind:value={statusCode}>
-
-
-<ChangePill value='200' suffix='%' direction='up' level='success'/>
-
-<StatusPill label='what' count={99}/>
-
-<TimePill msPeriod={statusCode} level='success' size='md'/>
-
+<Table
+  data={[{"foo":"Winter","bar":30,"baz":true},{"foo":"Spring","bar":63,"baz":false},{"foo":"Summer","bar":92,"baz":true},{"foo":"Fall","bar":72}]}
+  columns={[{"header":"","accessorKey":"baz","maxSize":5},{"header":"Season","accessorKey":"foo"},{"header":"Avg. temp","accessorKey":"bar"}]}
+  menu
+  dropdown
+  resizeable
+  pagination/>
 
 
 <style>
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 12px;
-        padding: 2rem;
-    }
+
 </style>

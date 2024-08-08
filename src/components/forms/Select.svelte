@@ -1,4 +1,5 @@
 <script>
+    import { createPopper, flip, preventOverflow } from "@popperjs/core";
     import { onMount } from "svelte";
     import "../../css/global.css";
     import clickOutside from "../../utils/clickOutside";
@@ -56,6 +57,8 @@
     let display = false;
     let inputRef;
     let selectRef;
+    let popperRef;
+    let popperInstance;
 
     let focusIdx = 0;
 
@@ -73,7 +76,7 @@
     }
 
     function handleSelect(opt) {
-        display = false;
+        hide();
         value = opt;
         onChange(opt);
         if (onSelectResetInput) {
@@ -82,7 +85,7 @@
     }
 
     function handleClose() {
-        display = false;
+        hide();
         onClose();
         if (onCloseResetInput) {
             inputVal = "";
@@ -91,7 +94,7 @@
 
     function handleOpen() {
         if (!disabled) {
-            display = true;
+            show();
         }
     }
 
@@ -122,10 +125,52 @@
         }
     }
 
+    function show() {
+        display = true;
+        popperRef.style.display = "block";
+
+        popperInstance.setOptions((options) => ({
+            ...options,
+            modifiers: [
+                ...options.modifiers,
+                { name: "eventListeners", enabled: true },
+            ],
+        }));
+
+        popperInstance.update();
+    }
+
+    function hide() {
+        display = false;
+        popperRef.style.display = "none";
+
+        popperInstance.setOptions((options) => ({
+            ...options,
+            modifiers: [
+                ...options.modifiers,
+                { name: "eventListeners", enabled: false },
+            ],
+        }));
+    }
+
     onMount(() => {
         if (focusOnMount) {
             selectRef.focus();
         }
+        popperInstance = createPopper(selectRef, popperRef, {
+            placement: "bottom-start",
+            strategy: "absolute",
+            modifiers: [
+                flip,
+                preventOverflow,
+                {
+                    name: "offset",
+                    options: {
+                        offset: [-1, -selectRef.offsetHeight - 1],
+                    },
+                },
+            ],
+        });
     });
 </script>
 
@@ -135,7 +180,8 @@
     class="druids-select {sizeClass} {className}"
     class:druids-select-borderless={isBorderless}
     class:druids-select-fullwidth={isFullWidth}
-    style="min-width:{minWidth};max-width:{maxWidth};{lockup}{style}"
+    style="min-width:{minWidth || 'initial'};max-width:{maxWidth ||
+        'initial'};{lockup}{style}"
     {disabled}
     bind:this={selectRef}
     on:keyup={handleSelectKeyUp}
@@ -151,7 +197,7 @@
                 class="option"
             />
         {:else}
-            <option {...value} on:click={handleOpen} class="option"/>
+            <option {...value} on:click={handleOpen} class="option" />
         {/if}
         {#if clearable}
             <button class="druids-select-clear" on:click={() => (value = "")}
@@ -162,7 +208,7 @@
         <option
             label={placeholder}
             on:click={handleOpen}
-            class="druids-placeholder"
+            class="druids-placeholder option"
         />
     {/if}
     {#if hasArrow}
@@ -171,67 +217,69 @@
         </span>
     {/if}
 
-    {#if display}
-        <div
-            class="druids-select-option"
-            use:clickOutside
-            on:outside={handleClose}
-            on:keydown={handleOptionKeyDown}
-            style="max-width:{maxOpenWidth};max-height:{maxOpenHeight};min-width:{minOpenWidth};min-height:{minOpenHeight};"
-        >
-            <!-- svelte-ignore a11y-autofocus -->
-            <input
-                name={inputName}
-                bind:this={inputRef}
-                bind:value={inputVal}
-                placeholder={value?.label ?? placeholder}
-                autofocus={display}
-                on:change={(e) => onInputChange(e.target.value)}
-                on:keyup={onInputKeyUp}
-            />
-            <div>
-                {#if isLoading}
-                    <span class="druids-select-loading"><Loading /> </span>
-                {:else}
-                    {#each filterFn(options, inputVal) as opt, idx}
-                        {#if optionRender}
-                            <svelte:component
-                                this={optionRender}
-                                {...opt}
-                                class="option {idx === focusIdx && 'focus'}"
-                                on:click={handleSelect(opt)}
-                                tabindex="0"
-                                on:mouseenter={() => (focusIdx = idx)}
-                            />
-                        {:else}
-                            <option
-                                {...opt}
-                                class="option {idx === focusIdx && 'focus'}"
-                                on:click={handleSelect(opt)}
-                                tabindex="0"
-                                on:mouseenter={() => (focusIdx = idx)}
-                            />
-                        {/if}
-                    {/each}
-                    {#if filterFn(options, inputVal).length === 0}
-                        <div class="druids-select-nosearch">
-                            {noSearchText}
-                        </div>
+    <div
+        bind:this={popperRef}
+        class="druids-select-option"
+        use:clickOutside
+        on:outside={handleClose}
+        on:keydown={handleOptionKeyDown}
+        style="max-width:{maxOpenWidth};max-height:{maxOpenHeight};min-width:{minOpenWidth};min-height:{minOpenHeight};"
+    >
+        <!-- svelte-ignore a11y-autofocus -->
+        <input
+            name={inputName}
+            bind:this={inputRef}
+            bind:value={inputVal}
+            placeholder={value?.label ?? placeholder}
+            autofocus={display}
+            on:change={(e) => onInputChange(e.target.value)}
+            on:keyup={onInputKeyUp}
+        />
+        <div>
+            {#if isLoading}
+                <span class="druids-select-loading"><Loading /> </span>
+            {:else}
+                {#each filterFn(options, inputVal) as opt, idx}
+                    {#if optionRender}
+                        <svelte:component
+                            this={optionRender}
+                            {...opt}
+                            class="option {idx === focusIdx && 'focus'}"
+                            on:click={handleSelect(opt)}
+                            tabindex="0"
+                            on:mouseenter={() => (focusIdx = idx)}
+                        />
+                    {:else}
+                        <option
+                            {...opt}
+                            class="option {idx === focusIdx && 'focus'}"
+                            on:click={handleSelect(opt)}
+                            tabindex="0"
+                            on:mouseenter={() => (focusIdx = idx)}
+                        />
                     {/if}
+                {/each}
+                {#if filterFn(options, inputVal).length === 0}
+                    <div class="druids-select-nosearch">
+                        {noSearchText}
+                    </div>
                 {/if}
-            </div>
+            {/if}
         </div>
-    {/if}
+    </div>
 
-    <input
-        {id}
-        {name}
-        value={value?.value}
-        style="visibility: hidden; position:absolute;pointer-events:none;"
-    />
+    <input {id} {name} value={value?.value} class="druids-select-input" />
 </button>
 
 <style>
+    .druids-select-input {
+        visibility: hidden;
+        position: absolute;
+        pointer-events: none;
+        top: 0;
+        left: 0;
+        width: 0;
+    }
     .druids-select-loading {
         display: flex;
         align-items: center;
@@ -243,11 +291,9 @@
     }
     .druids-select-clear {
         all: unset;
-        box-sizing: border-box;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100%;
         padding: 0px 4px;
         font-size: small;
         background-color: var(--ui-text-tertiary);
@@ -269,7 +315,6 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        box-sizing: border-box;
         outline: 1.5px solid var(--ui-border);
         border-radius: 4px;
         cursor: pointer;
@@ -329,6 +374,7 @@
     }
 
     .druids-select-option {
+        display: none;
         background: var(--ui-background-elevated);
         outline: 1px solid var(--ui-interaction-primary);
         border-radius: 4px;
@@ -348,7 +394,7 @@
         border-bottom: 1px solid var(--ui-border);
     }
 
- /* Not global    */
+    /* Not global    */
 
     .druids-select.druids-select-fullwidth > .option {
         flex-grow: 1;
@@ -375,8 +421,6 @@
         color: var(--ui-text-knockout);
         outline: none;
     }
-
-
 
     :global(.druids-select.druids-select-fullwidth > .option) {
         flex-grow: 1;
