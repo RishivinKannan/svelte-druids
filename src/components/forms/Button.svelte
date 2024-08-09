@@ -142,6 +142,8 @@
         border: 1px solid var(--druids-button-color, var(--ui-border));
         padding: 4px 8px;
         border-radius: 4px;
+        box-sizing: border-box;
+        justify-content: center;
     }
     .druids-button[data-fullwidth="true"] {
         width: 100%;
@@ -161,7 +163,7 @@
         font-size: larger;
         padding: 6px 12px;
     }
-
+    
     .druids-loading-indicator {
         display: inline-flex;
         align-items: center;
@@ -191,52 +193,42 @@
         background: transparent;
         color: var(--druids-button-color, var(--ui-interaction-primary));
     }
-
+    
     /*Disabled State*/
-
+    
     .druids-button:disabled {
         background: var(--ui-background-secondary) !important;
         color: var(--ui-text-disabled) !important;
         border: none;
         cursor: not-allowed;
     }
-
+    
     /* Active state */
-
+    
     .druids-button:active {
-        outline: 3px solid rgba(0, 0, 0, 0.03);
-        outline-offset: -4px;
+        box-shadow: inset 0 0.1em 0.3em #24293170;
     }
     .druids-button:active:disabled {
-        outline: none;
+        box-shadow: none ;
     }
     .druids-button.druids-button-naked:active {
-        outline: none;
+        box-shadow: none;
     }
-    .druids-button.druids-button-primary:active {
-        outline: 3px solid rgba(0, 0, 0, 0.06);
-    }
-    .druids-button.druids-button-naked:active {
-        outline: none;
-    }
-
+    
+    
     /* Forced Active state */
     .druids-button.druids-button-active {
-        outline: 3px solid rgba(0, 0, 0, 0.02);
-        outline-offset: -4px;
+        box-shadow: inset 0 0.1em 0.3em #24293170;
+    }
+    .druids-button.druids-button-active:disabled {
+        box-shadow: none ;
     }
     .druids-button.druids-button-naked.druids-button-active {
-        outline: none;
+        box-shadow: none;
     }
-    .druids-button.druids-button-primary.druids-button-active {
-        outline: 3px solid rgba(0, 0, 0, 0.06);
-    }
-    .druids-button.druids-button-naked.druids-button-active {
-        outline: none;
-    }
-
+    
     /* Hovered State */
-
+    
     .druids-button:hover {
         border-color: var(
             --druids-button-color-contrast,
@@ -245,6 +237,12 @@
     }
     .druids-button:disabled:hover {
         border-color: var(--ui-border);
+        
+    }
+    
+    .druids-button.druids-button-primary:hover{
+        background: var(--druids-button-color-contrast,var(--ui-interaction-primary-contrast));
+        border: 1px solid var(--druids-button-color, var(--ui-border));
     }
 
     .druids-button.druids-button-shade:hover {
@@ -308,6 +306,11 @@
     }
     .druids-button:disabled.druids-button-hovered {
         border-color: var(--ui-border);
+    }
+
+    .druids-button.druids-button-primary.druids-button-hovered{
+        background: var(--druids-button-color-contrast,var(--ui-interaction-primary-contrast));
+        border: 1px solid var(--druids-button-color, var(--ui-border));
     }
     .druids-button.druids-button-shade.druids-button-hovered {
         background: var(--druids-button-color, var(--ui-interaction-primary));
