@@ -14,14 +14,13 @@
     export let className = "";
 
     function handleClick(idx) {
-        if(idx!==currentPage){
-
+        if (idx !== currentPage) {
             onChange(idx);
         }
     }
 </script>
 
-<div class="druids-pagination-container {className}">
+<nav class="druids-pagination-container {className}">
     <button
         on:click={() => handleClick(currentPage - 1)}
         disabled={currentPage === 1}
@@ -87,10 +86,11 @@
     >
         <RightPageArrow size="1.7" />
     </button>
-</div>
+</nav>
 
 <style>
     .druids-pagination-container {
+        all: unset;
         display: inline-flex;
         gap: 4px;
         align-items: center;
