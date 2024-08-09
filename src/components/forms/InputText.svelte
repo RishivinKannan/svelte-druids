@@ -95,6 +95,8 @@
         on:mouseleave
         on:mouseover
         on:mousedown
+        on:keyup
+        on:keydown
         on:keypress={keyUpHandler}
         {...$$restProps}
     />
@@ -190,12 +192,13 @@
         font-size: larger;
         padding: 6px 12px;
     }
-
+    
     .druids-input {
         all: unset;
         width: var(--druids-input-width, 240px);
         color: var(--ui-text);
         z-index: 1;
+        max-width: 100%;
     }
     .druids-input-container:has(.druids-input:disabled) {
         background: var(--ui-background-secondary);
@@ -209,15 +212,15 @@
 
     .druids-input-container:has(.druids-input:focus) {
         outline: 1px solid
-            var(--druids-input-color, var(--ui-interaction-primary));
+        var(--druids-input-color, var(--ui-interaction-primary));
         background: var(
             --druids-input-color-soft,
             var(--ui-interaction-secondary)
-        );
-    }
-
-    .druids-input::placeholder {
-        color: var(--ui-text-secondary);
+            );
+        }
+        
+        .druids-input::placeholder {
+            color: var(--ui-text-secondary);
     }
 
     .druids-input-container.druids-input-soft {

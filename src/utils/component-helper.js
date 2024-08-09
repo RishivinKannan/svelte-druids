@@ -4,5 +4,6 @@ export function lockupStyle(side) {
     if (side === 'LEFT') return `border-radius:4px 0 0 4px;`
     if (side === 'RIGHT') return `border-radius:0 4px 4px 0;`
     if (side === 'FULL') return `border-radius: 4px`;
+    if (side === 'NONE') return `border-radius: 0;`
     return ''
 } 

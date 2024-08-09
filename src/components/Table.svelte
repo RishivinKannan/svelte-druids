@@ -20,6 +20,7 @@
     import { writable } from "svelte/store";
     import moveIndex from "../utils/moveIndex";
     import CheckBox from "./CheckBox.svelte";
+    import InputText from "./forms/InputText.svelte";
     import HighlightCell, { highlightWords } from "./HighlightCell.svelte";
     import DownIcon from "./icons/DownIcon.svelte";
     import HideIcon from "./icons/HideIcon.svelte";
@@ -385,15 +386,12 @@
 <div class="druids-table-container">
     <div class="druids-table-header">
         {#if globalSearch}
-            <div class="druids-table-header-input">
-                <SearchIcon />
-                <input
-                    type="text"
-                    bind:value={gobalFilterValue}
-                    on:keyup={handleKeyUp}
-                    placeholder={searchPlaceholder}
-                />
-            </div>
+            <InputText
+                icon={SearchIcon}
+                bind:value={gobalFilterValue}
+                on:keyup={handleKeyUp}
+                placeholder={searchPlaceholder}
+            />
         {/if}
 
         {#if menu}
@@ -606,14 +604,14 @@
         box-sizing: border-box;
     } */
 
-    .druids-table-header input[type="text"] {
+    /* .druids-table-header input[type="text"] {
         all: unset;
         color: var(--ui-text);
     }
 
     .druids-table-header input::placeholder {
         color: var(--ui-icon);
-    }
+    } */
     /* .druids-table-settings label {
         display: flex;
         justify-content: space-between;
@@ -640,7 +638,7 @@
         background: var(--ui-interaction-primary);
         color: var(--ui-text-knockout);
     }
-    .druids-table-header-input {
+    /* .druids-table-header-input {
         width: 50%;
         min-width: 200px;
         max-width: 400px;
@@ -651,7 +649,7 @@
         border: solid 1px var(--ui-border);
         border-radius: 4px;
         color: var(--ui-icon);
-    }
+    } */
 
     .druids-table {
         width: 100%;
@@ -721,7 +719,7 @@
         cursor: pointer;
     }
 
-    .druids-table-dropdown-trigger:not(:hover):focus{
+    .druids-table-dropdown-trigger:not(:hover):focus {
         outline: none;
     }
 

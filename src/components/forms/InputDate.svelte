@@ -98,6 +98,8 @@
         on:mouseleave
         on:mouseover
         on:mousedown
+        on:keyup
+        on:keydown
         {...$$restProps}
     />
     {#if validationMessage}
@@ -174,6 +176,7 @@
         width: var(--druids-input-width, 240px);
         color: var(--ui-text);
         z-index: 1;
+        max-width: 100%;
     }
     .druids-input-container:has(.druids-input:disabled) {
         background: var(--ui-background-secondary);
