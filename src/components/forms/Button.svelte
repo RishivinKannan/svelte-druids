@@ -144,6 +144,7 @@
         border-radius: 4px;
         box-sizing: border-box;
         justify-content: center;
+        background: var(--ui-background);
     }
     .druids-button[data-fullwidth="true"] {
         width: 100%;
