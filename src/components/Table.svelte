@@ -35,6 +35,7 @@
     import PopoverMenuItem from "./PopoverMenuItem.svelte";
     import PopoverMenuSection from "./PopoverMenuSection.svelte";
     import Toggle from "./forms/Toggle.svelte";
+    import PaginationSummary from "./nav/PaginationSummary.svelte";
 
     export let data;
     /*
@@ -70,6 +71,11 @@
     export let initialPageIndex = 0;
     export let initialHiddenColumnIds = [];
     export let initialColumnOrderIds = [];
+
+    /**
+     * PaginationSummaryProps
+     */
+    export let summary = {};
 
     /**
      * It is use to store the state of table in localStorage. Optional.
@@ -385,6 +391,20 @@
 
 <div class="druids-table-container">
     <div class="druids-table-header">
+        {#if $table.getState().pagination.pageSize < data.length}
+        <div style="flex-grow: 1;">
+        <PaginationSummary
+            pageStart={$table.getState().pagination.pageSize *
+                $table.getState().pagination.pageIndex +
+                1}
+            pageEnd={$table.getState().pagination.pageSize *
+                ($table.getState().pagination.pageIndex + 1)}
+            elementLabel={summary.elementLabel ? summary.elementLabel : "Row"}
+            totalElements={$table.getPageCount()}
+            {...summary}
+        />
+        </div>
+        {/if}
         {#if globalSearch}
             <InputText
                 icon={SearchIcon}
@@ -510,7 +530,7 @@
                             {/if}
                             {#if header.column.getCanResize() && resizeable}
                                 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-                                <span
+                                <button
                                     class="druids-table-resizer resizer"
                                     on:dblclick={() =>
                                         header.column.resetSize()}
@@ -527,7 +547,7 @@
             {#each $table.getRowModel().rows as row}
                 <tr>
                     {#each row.getVisibleCells() as cell}
-                        <td style="width: {cell.column.getSize()}px">
+                        <td style="width: {cell.column.getSize()}px" data-isResizing={cell.column.getIsResizing()}>
                             <svelte:component
                                 this={flexRender(
                                     cell.column.columnDef.cell,
@@ -574,6 +594,8 @@
         padding: 4px 0px;
         justify-content: space-between;
         align-items: center;
+        gap:4px;
+        flex-wrap: wrap;
     }
 
     .druids-table-footer {
@@ -582,6 +604,7 @@
         gap: 8px;
         justify-content: end;
         align-items: center;
+        flex-wrap: wrap;
     }
     .druids-tabel-select-label {
         display: inline-block;
@@ -657,6 +680,8 @@
         border: solid 1px var(--ui-border);
         color: var(--ui-text);
         background: var(--ui-background);
+        border-radius: 4px;
+        overflow: hidden;
     }
     .druids-table th:has(div:hover) {
         background: var(--ui-interaction-primary);
@@ -724,17 +749,24 @@
     }
 
     .druids-table-resizer {
+        all: unset;
         position: absolute;
         top: 0;
         bottom: 0;
         right: 0;
-        width: 2px;
-        background: lightgray;
+        width: 3px;
         z-index: 1;
         cursor: col-resize;
     }
     .druids-table-resizer:hover,
-    .druids-table-resizer:focus {
-        width: 6px;
+    .druids-table-resizer:active {
+        background: var(--ui-interaction-primary-contrast);
+    }
+    .druids-table-resizer:active{
+        width: 4px;
+    }
+
+    .druids-table:has( .druids-table-resizer:active) td[data-isResizing="true"]{
+        border-right: 2px solid var(--ui-interaction-primary);
     }
 </style>
